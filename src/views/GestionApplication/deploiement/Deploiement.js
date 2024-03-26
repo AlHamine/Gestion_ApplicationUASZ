@@ -20,20 +20,20 @@ import {
 import { SERVER_URL } from 'src/constantURL'
 import { Link } from 'react-router-dom'
 
-export default function Classe() {
-  const [listClasse, setListClasse] = useState([])
+export default function Deploiement() {
+  const [listDeploiement, setListDeploiement] = useState([])
   const [searchTerm, setSearchTerm] = useState('')
   const [itemsPerPage] = useState(10) // Nombre d'éléments par page
   const [currentPage, setCurrentPage] = useState(1) // La page courante
 
   useEffect(() => {
-    fetchClasse()
+    fetchDeploiement()
   }, [])
 
   const handleSearchChange = (libelle) => {
     setSearchTerm(libelle.target.value)
   }
-  const lastPageNumber = Math.ceil(listClasse.length / itemsPerPage)
+  const lastPageNumber = Math.ceil(listDeploiement.length / itemsPerPage)
 
   const handleChangePaginate = (value) => {
     if (value === -100) {
@@ -43,7 +43,7 @@ export default function Classe() {
     } else setCurrentPage(value)
   }
 
-  const fetchClasse = () => {
+  const fetchDeploiement = () => {
     fetch(SERVER_URL + 'maquette/classe')
       .then((response) => {
         if (!response.ok) {
@@ -54,17 +54,17 @@ export default function Classe() {
       .then((data) => {
         // Trier les ateliers par date de création en ordre décroissant
         // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        setListClasse(data)
+        setListDeploiement(data)
       })
-      .catch((error) => console.error('Error fetching Classe:', error))
+      .catch((error) => console.error('Error fetching Deploiement:', error))
   }
 
   const onDelClick = (id) => {
-    if (window.confirm('Are you sure to delete de Classe?')) {
+    if (window.confirm('Are you sure to delete de Deploiement?')) {
       fetch(SERVER_URL + `maquette/classe/${id}`, { method: 'DELETE' })
         .then((response) => {
           if (response.ok) {
-            fetchClasse()
+            fetchDeploiement()
           } else {
             alert("Une erreur s'est produite lors de la suppression.")
           }
@@ -73,12 +73,12 @@ export default function Classe() {
     }
   }
 
-  // Index de la dernière Classe à afficher sur la page
+  // Index de la dernière Deploiement à afficher sur la page
   const indexOfLastUE = currentPage * itemsPerPage
-  // Index de la première Classe à afficher sur la page
+  // Index de la première Deploiement à afficher sur la page
   const indexOfFirstUE = indexOfLastUE - itemsPerPage
-  // Liste des Classe à afficher sur la page actuelle
-  const currentUEs = listClasse
+  // Liste des Deploiement à afficher sur la page actuelle
+  const currentUEs = listDeploiement
     .filter((classe) => classe.libelle.toLowerCase().includes(searchTerm.toLowerCase()))
     .slice(indexOfFirstUE, indexOfLastUE)
 
@@ -86,9 +86,9 @@ export default function Classe() {
     <CRow>
       <div className="d-grid gap-2 col-6 mx-auto" style={{ marginBottom: '10px' }}>
         <div className="text-center">
-          <Link to={'/maquette/classe/AjouterClasse'}>
+          <Link to={'/maquette/classe/AjouterDeploiement'}>
             <CButton color="primary" style={{ fontWeight: 'bold' }}>
-              Ajouter un Classe
+              Ajouter un Deploiement
             </CButton>
           </Link>
         </div>
@@ -98,12 +98,12 @@ export default function Classe() {
           <CCardHeader>
             <div>
               <div>
-                <strong style={{ display: 'block', textAlign: 'center' }}>Liste de Classe</strong>
+                <strong style={{ display: 'block', textAlign: 'center' }}>Liste de Deploiement</strong>
               </div>
               <CFormInput
                 type="text"
                 size="sm"
-                placeholder="Rechercher Classe par libelle"
+                placeholder="Rechercher Deploiement par libelle"
                 aria-label="sm input example"
                 onChange={handleSearchChange}
               />
@@ -137,7 +137,7 @@ export default function Classe() {
                         : classe.description}
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
-                      <Link to={`/maquette/classe/ModifierClasse/${classe.id}`}>
+                      <Link to={`/maquette/classe/ModifierDeploiement/${classe.id}`}>
                         <CButton color="primary" style={{ fontWeight: 'bold', marginRight: '5px' }}>
                           Modifier
                         </CButton>
