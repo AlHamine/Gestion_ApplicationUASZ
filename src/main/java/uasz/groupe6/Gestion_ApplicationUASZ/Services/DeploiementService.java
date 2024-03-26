@@ -41,8 +41,8 @@ public class DeploiementService {
         Deploiement deploiement = rechercheDeploiement(update.getId());
         deploiement.setServeur(update.getServeur());
         deploiement.setDate_deploiement(update.getDate_deploiement());
-        deploiement.setApplication(update.getApplication());
-        deploiement.setUtilisateur(update.getUtilisateur());
+        // deploiement.setApplication(update.getApplication());
+        // deploiement.setUtilisateur(update.getUtilisateur());
         return deploiementRepository.save(deploiement);
     }
 

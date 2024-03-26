@@ -1,5 +1,5 @@
-package uasz.groupe6.Gestion_ApplicationUASZ.Models;
+// package uasz.groupe6.Gestion_ApplicationUASZ.Models;
 
-public class Utilisateur {
+// public class Utilisateur {
 
-}
+// }

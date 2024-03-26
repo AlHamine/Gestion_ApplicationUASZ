@@ -10,6 +10,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author Seydina Mouha.... NDIAYE
+ */
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,7 +24,7 @@ public class Deploiement {
     private Long id;
     private String serveur;
     private Date date_deploiement;
-    private Application application;
-    private Utilisateur utilisateur; 
-    
+    // private Application application;
+    // private Utilisateur utilisateur;
+
 }
