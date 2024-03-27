@@ -1,5 +1,5 @@
-import React from 'react'
-import { CFooter } from '@coreui/react'
+import React from "react";
+import { CFooter } from "@coreui/react";
 
 const AppFooter = () => {
   return (
@@ -16,11 +16,14 @@ const AppFooter = () => {
           CoreUI React Admin &amp; Dashboard Template
         </a>
       </div> */}
-      <a href="#">
-        <div>Seydina Mouhamadou Alhamine Ndiaye && Abdoulaye Gaye</div>
-      </a>
+      {/* <a href="#"> */}
+      <div className="text-center" style={{ textAlign: "center" }}>
+        &copy; Groupe-6-Seydina Mouhamadou Alhamine Ndiaye - Abdoulaye Gaye -
+        Souleymane Diagne
+      </div>
+      {/* </a> */}
     </CFooter>
-  )
-}
+  );
+};
 
-export default React.memo(AppFooter)
+export default React.memo(AppFooter);

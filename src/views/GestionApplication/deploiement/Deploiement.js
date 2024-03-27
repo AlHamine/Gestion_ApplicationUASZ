@@ -67,7 +67,11 @@ export default function Deploiement() {
 
   const onDelClick = (id) => {
     if (window.confirm("Are you sure to delete de Deploiement?")) {
-      fetch(SERVER_URL + `maquette/dep/${id}`, { method: "DELETE" })
+      const token = sessionStorage.getItem("jwt");
+      fetch(SERVER_URL + `deploiement/${id}`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json", Authorization: token },
+      })
         .then((response) => {
           if (response.ok) {
             fetchDeploiement();
@@ -121,13 +125,13 @@ export default function Deploiement() {
             <div>
               <div>
                 <strong style={{ display: "block", textAlign: "center" }}>
-                  Liste de Deploiement
+                  <h2> Liste des {listDeploiement?.length} Deploiements</h2>
                 </strong>
               </div>
               <CFormInput
                 type="text"
                 size="sm"
-                placeholder="Rechercher Deploiement par libelle"
+                placeholder="Rechercher Deploiement par serveur | application | utilisateur | Date de deploiement"
                 aria-label="sm input example"
                 onChange={handleSearchChange}
               />
