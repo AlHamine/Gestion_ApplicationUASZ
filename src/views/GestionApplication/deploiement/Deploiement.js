@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
   CCard,
   CCardBody,
@@ -15,79 +15,101 @@ import {
   CPagination,
   CPaginationItem,
   CFormInput,
-} from '@coreui/react'
+} from "@coreui/react";
 // import DeleteIcon from '@mui/icons-material/Delete'
-import { SERVER_URL } from 'src/constantURL'
-import { Link } from 'react-router-dom'
+import { SERVER_URL } from "src/constantURL";
+import { Link } from "react-router-dom";
+import { maxWidth } from "@mui/system";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export default function Deploiement() {
-  const [listDeploiement, setListDeploiement] = useState([])
-  const [searchTerm, setSearchTerm] = useState('')
-  const [itemsPerPage] = useState(10) // Nombre d'éléments par page
-  const [currentPage, setCurrentPage] = useState(1) // La page courante
+  const [listDeploiement, setListDeploiement] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [itemsPerPage] = useState(10); // Nombre d'éléments par page
+  const [currentPage, setCurrentPage] = useState(1); // La page courante
 
   useEffect(() => {
-    fetchDeploiement()
-  }, [])
+    fetchDeploiement();
+  }, []);
 
   const handleSearchChange = (libelle) => {
-    setSearchTerm(libelle.target.value)
-  }
-  const lastPageNumber = Math.ceil(listDeploiement.length / itemsPerPage)
+    setSearchTerm(libelle.target.value);
+  };
+  const lastPageNumber = Math.ceil(listDeploiement.length / itemsPerPage);
 
   const handleChangePaginate = (value) => {
     if (value === -100) {
-      setCurrentPage(currentPage + 1)
+      setCurrentPage(currentPage + 1);
     } else if (value === -200) {
-      setCurrentPage(currentPage - 1)
-    } else setCurrentPage(value)
-  }
+      setCurrentPage(currentPage - 1);
+    } else setCurrentPage(value);
+  };
 
   const fetchDeploiement = () => {
-    fetch(SERVER_URL + 'maquette/classe')
+    const token = sessionStorage.getItem("jwt");
+    fetch(SERVER_URL + "deploiement", {
+      headers: { Authorization: token },
+    })
       .then((response) => {
         if (!response.ok) {
-          throw new Error('Network response was not ok')
+          throw new Error("Network response was not ok");
         }
-        return response.json()
+        return response.json();
       })
       .then((data) => {
         // Trier les ateliers par date de création en ordre décroissant
         // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        setListDeploiement(data)
+        setListDeploiement(data);
       })
-      .catch((error) => console.error('Error fetching Deploiement:', error))
-  }
+      .catch((error) => console.error("Error fetching Deploiement:", error));
+  };
 
   const onDelClick = (id) => {
-    if (window.confirm('Are you sure to delete de Deploiement?')) {
-      fetch(SERVER_URL + `maquette/classe/${id}`, { method: 'DELETE' })
+    if (window.confirm("Are you sure to delete de Deploiement?")) {
+      fetch(SERVER_URL + `maquette/dep/${id}`, { method: "DELETE" })
         .then((response) => {
           if (response.ok) {
-            fetchDeploiement()
+            fetchDeploiement();
           } else {
-            alert("Une erreur s'est produite lors de la suppression.")
+            alert("Une erreur s'est produite lors de la suppression.");
           }
         })
-        .catch((err) => console.error(err))
+        .catch((err) => console.error(err));
     }
+  };
+  function extractDateOnly(dateTimeString) {
+    // Vérifier si la chaîne est vide ou null
+    if (!dateTimeString) {
+      return null;
+    }
+
+    // Extraire la date uniquement
+    const dateOnly = dateTimeString.substring(0, 10);
+
+    return dateOnly;
   }
 
   // Index de la dernière Deploiement à afficher sur la page
-  const indexOfLastUE = currentPage * itemsPerPage
+  const indexOfLastUE = currentPage * itemsPerPage;
   // Index de la première Deploiement à afficher sur la page
-  const indexOfFirstUE = indexOfLastUE - itemsPerPage
+  const indexOfFirstUE = indexOfLastUE - itemsPerPage;
   // Liste des Deploiement à afficher sur la page actuelle
   const currentUEs = listDeploiement
-    .filter((classe) => classe.libelle.toLowerCase().includes(searchTerm.toLowerCase()))
-    .slice(indexOfFirstUE, indexOfLastUE)
+    .filter((dep) =>
+      dep.serveur?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .slice(indexOfFirstUE, indexOfLastUE);
 
   return (
     <CRow>
-      <div className="d-grid gap-2 col-6 mx-auto" style={{ marginBottom: '10px' }}>
+      <div
+        className="d-grid gap-2 col-6 mx-auto"
+        style={{ marginBottom: "10px" }}
+      >
         <div className="text-center">
-          <Link to={'/maquette/classe/AjouterDeploiement'}>
-            <CButton color="primary" style={{ fontWeight: 'bold' }}>
+          <Link to={"/maquette/dep/AjouterDeploiement"}>
+            <CButton color="primary" style={{ fontWeight: "bold" }}>
               Ajouter un Deploiement
             </CButton>
           </Link>
@@ -98,7 +120,9 @@ export default function Deploiement() {
           <CCardHeader>
             <div>
               <div>
-                <strong style={{ display: 'block', textAlign: 'center' }}>Liste de Deploiement</strong>
+                <strong style={{ display: "block", textAlign: "center" }}>
+                  Liste de Deploiement
+                </strong>
               </div>
               <CFormInput
                 type="text"
@@ -113,11 +137,17 @@ export default function Deploiement() {
             <CTable>
               <CTableHead color="dark">
                 <CTableRow>
-                  {/* <CTableHeaderCell scope="col">#</CTableHeaderCell> */}
-                  <CTableHeaderCell scope="col">Libelle</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Effectif</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">NbreGroupe</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Description</CTableHeaderCell>
+                  <CTableHeaderCell scope="col" style={{ maxWidth: "0px" }}>
+                    #
+                  </CTableHeaderCell>
+                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
+                    Application
+                  </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Serveur</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">
+                    Date Deploiement
+                  </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Utisateur</CTableHeaderCell>
                   <CTableHeaderCell scope="col" className="text-center">
                     Operation
                   </CTableHeaderCell>
@@ -125,33 +155,52 @@ export default function Deploiement() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {currentUEs.map((classe, index) => (
+                {currentUEs.map((dep, index) => (
                   <CTableRow key={index}>
-                    {/* <CTableHeaderCell scope="row">{classe.id}</CTableHeaderCell> */}
-                    <CTableDataCell>{classe.libelle}</CTableDataCell>
-                    <CTableDataCell>{classe.effectif}</CTableDataCell>
-                    <CTableDataCell>{classe.nbreGroupe}</CTableDataCell>
+                    <CTableHeaderCell style={{ width: "0px" }} scope="row">
+                      {dep.id}
+                    </CTableHeaderCell>
+                    <CTableDataCell>{dep?.application}</CTableDataCell>
+                    <CTableDataCell>{dep.serveur}</CTableDataCell>
                     <CTableDataCell>
-                      {classe.description?.length > 15
-                        ? `${classe.description.substring(0, 15)}...`
-                        : classe.description}
+                      {" "}
+                      {extractDateOnly(dep.date_deploiement)}
                     </CTableDataCell>
+                    <CTableDataCell>{dep.utisateur}</CTableDataCell>
+                    {/* <CTableDataCell>
+                      {dep.description?.length > 15
+                        ? `${dep.description.substring(0, 15)}...`
+                        : dep.description}
+                    </CTableDataCell> */}
                     <CTableDataCell className="text-center">
-                      <Link to={`/maquette/classe/ModifierDeploiement/${classe.id}`}>
-                        <CButton color="primary" style={{ fontWeight: 'bold', marginRight: '5px' }}>
-                          Modifier
+                      <Link to={`/maquette/dep/ModifierDeploiement/${dep.id}`}>
+                        <CButton
+                          color="primary"
+                          style={{ fontWeight: "bold", marginRight: "5px" }}
+                        >
+                          <EditIcon className="icon4" />
                         </CButton>
                       </Link>
-                      <CButton color="danger" onClick={() => onDelClick(classe.id)}>
-                        Supprimer
+                      <CButton
+                        color="danger"
+                        onClick={() => onDelClick(dep.id)}
+                      >
+                        <DeleteIcon
+                          style={{ color: "white" }}
+                          className="icon3"
+                        />
                         {/* <DeleteIcon className="icon3" /> */}
                       </CButton>
                     </CTableDataCell>
                     <CTableDataCell>
-                      <Link to={`/maquette/classe/classeDetails/${classe.id}`}>
+                      <Link to={`/maquette/dep/classeDetails/${dep.id}`}>
                         <CButton
                           color="info"
-                          style={{ fontWeight: 'bold', marginRight: '5px', marginLeft: '0px' }}
+                          style={{
+                            fontWeight: "bold",
+                            marginRight: "5px",
+                            marginLeft: "0px",
+                          }}
                         >
                           Detail
                         </CButton>
@@ -170,22 +219,30 @@ export default function Deploiement() {
                   {currentPage === 1 ? (
                     <CPaginationItem disabled>1</CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(1)}>1</CPaginationItem>
+                    <CPaginationItem onClick={() => handleChangePaginate(1)}>
+                      1
+                    </CPaginationItem>
                   )}
                   {currentPage === lastPageNumber ? (
                     <CPaginationItem disabled>2</CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(2)}>2</CPaginationItem>
+                    <CPaginationItem onClick={() => handleChangePaginate(2)}>
+                      2
+                    </CPaginationItem>
                   )}
                   {currentPage === lastPageNumber ? (
                     <CPaginationItem disabled>3</CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(3)}>3</CPaginationItem>
+                    <CPaginationItem onClick={() => handleChangePaginate(3)}>
+                      3
+                    </CPaginationItem>
                   )}
                   {currentPage === lastPageNumber ? (
                     <CPaginationItem disabled>Fin</CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(lastPageNumber)}>
+                    <CPaginationItem
+                      onClick={() => handleChangePaginate(lastPageNumber)}
+                    >
                       Fin
                     </CPaginationItem>
                   )}
@@ -203,5 +260,5 @@ export default function Deploiement() {
         </CCard>
       </CCol>
     </CRow>
-  )
+  );
 }
