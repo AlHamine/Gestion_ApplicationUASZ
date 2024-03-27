@@ -32,13 +32,13 @@ public class LicenceController {
     }
 
     @GetMapping("/{id}")
-    public Licence recherLicence(@PathVariable String type){
-        return licenceService.rechercheLicence(type);
+    public Licence recherLicence(@PathVariable Long id){
+        return licenceService.rechercheLicence(id);
     }
 
     @DeleteMapping("/{id}")
-    public Boolean supprimerLicence(@PathVariable String type){
-        return licenceService.supprimerLicence(type); 
+    public Boolean supprimerLicence(@PathVariable Long id){
+        return licenceService.supprimerLicence(id); 
     }
 
     @PatchMapping("/{id}")

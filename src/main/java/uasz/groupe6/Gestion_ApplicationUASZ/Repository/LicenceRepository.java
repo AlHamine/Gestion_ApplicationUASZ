@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import uasz.groupe6.Gestion_ApplicationUASZ.Models.Licence;
 
 @Repository
-public interface LicenceRepository extends JpaRepository<Licence,String> {
+public interface LicenceRepository extends JpaRepository<Licence,Long> {
     // List<Licence> findByMethodePaiement(String methodePaiement);
 
     

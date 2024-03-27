@@ -20,6 +20,7 @@ public class Licence {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String type;
     private Date Date_Expiration;
     private int Nbre_Utilisateur;
