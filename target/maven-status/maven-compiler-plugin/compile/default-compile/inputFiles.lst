@@ -1,0 +1,12 @@
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Controllers/LicenceController.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Models/Application.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Repository/DeploiementRepository.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Services/LicenceService.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/GestionApplicationUaszApplication.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Repository/LicenceRepository.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Services/DeploiementService.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/ServletInitializer.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Models/Utilisateur.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Models/Licence.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Controllers/DeploiementController.java
+/home/zboss/Téléchargements/Gestion_ApplicationUASZ-back-licence-diagne/Gestion_ApplicationUASZ/src/main/java/uasz/groupe6/Gestion_ApplicationUASZ/Models/Deploiement.java
