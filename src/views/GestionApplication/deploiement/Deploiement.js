@@ -16,19 +16,30 @@ import {
   CPaginationItem,
   CFormInput,
 } from "@coreui/react";
+import CancelSharpIcon from "@mui/icons-material/CancelSharp";
+
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 // import DeleteIcon from '@mui/icons-material/Delete'
+import { PersonAdd, Email, Lock } from "@mui/icons-material";
+import FileIcon from "@mui/icons-material/FileCopy";
 import { SERVER_URL } from "src/constantURL";
 import { Link } from "react-router-dom";
 import { maxWidth } from "@mui/system";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import { Button, TextField, InputAdornment, Container } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 export default function Deploiement() {
   const [listDeploiement, setListDeploiement] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage] = useState(10); // Nombre d'éléments par page
   const [currentPage, setCurrentPage] = useState(1); // La page courante
-
+  const [open, setOpen] = useState(false);
   useEffect(() => {
     fetchDeploiement();
   }, []);
@@ -93,7 +104,12 @@ export default function Deploiement() {
 
     return dateOnly;
   }
-
+  const openDialog = () => {
+    setOpen(true);
+  };
+  const closeDialog = () => {
+    setOpen(false);
+  };
   // Index de la dernière Deploiement à afficher sur la page
   const indexOfLastUE = currentPage * itemsPerPage;
   // Index de la première Deploiement à afficher sur la page
@@ -112,11 +128,133 @@ export default function Deploiement() {
         style={{ marginBottom: "10px" }}
       >
         <div className="text-center">
-          <Link to={"/maquette/dep/AjouterDeploiement"}>
-            <CButton color="primary" style={{ fontWeight: "bold" }}>
-              Ajouter un Deploiement
-            </CButton>
-          </Link>
+          {/* <Link to={"/maquette/dep/AjouterDeploiement"}> */}
+          <CButton
+            color="primary"
+            style={{ fontWeight: "bold" }}
+            onClick={openDialog}
+          >
+            Ajouter un Deploiement
+          </CButton>
+          {/* </Link> */}
+          <Dialog open={open} onClose={closeDialog}>
+            <DialogTitle> Nouveau Client </DialogTitle>
+            <DialogContent>
+              <Container>
+                <TextField
+                  id="nom"
+                  label="Nom"
+                  variant="outlined"
+                  type="text"
+                  fullWidth
+                  onChange={(event) => setNom(event.target.value)}
+                  // value={client.nom}
+                  margin="normal"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonAdd />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <TextField
+                  id="prenom"
+                  type="text"
+                  // value={client.prenom}
+                  label="Prénom"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  onChange={(event) => setPrenom(event.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonAdd />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <TextField
+                  id="mail"
+                  type="email"
+                  label="Email"
+                  // value={client.mail}
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Email />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(event) => setMail(event.target.value)}
+                />
+                <TextField
+                  id="password"
+                  label="Mot de passe"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  type="password"
+                  // value={client.password}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Lock />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+                <TextField
+                  id="confirmPassword"
+                  label="Confirmer Mot de passe"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  type="password"
+                  // value={client.confirmPassword}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <Lock />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                />
+                <TextField
+                  id="file"
+                  label="Fichier"
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  type="file"
+                  onChange={(event) => setFile(event.target.files[0])}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <FileIcon />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+              </Container>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeDialog}>
+                <CancelSharpIcon color="error" />
+              </Button>
+              <Button
+              // onClick={handleSubmit}
+              >
+                <CheckCircleOutlineIcon color="success" />
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </div>
       <CCol xs={12}>
