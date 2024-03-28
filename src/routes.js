@@ -42,12 +42,26 @@ const DetailsClasse = React.lazy(() =>
   import("./views/GestionApplication/deploiement/DetailsClasse")
 );
 
+// ---------------------------- Application ----------------------------
+const Application = React.lazy(() =>
+  import("./views/GestionApplication/application/Application")
+);
+const AjouterApplication = React.lazy(() =>
+  import("./views/GestionApplication/application/AjouterApplication")
+);
+const ModifierApplication = React.lazy(() =>
+  import("./views/GestionApplication/application/ModifierApplication")
+);
+const DetailsApplication = React.lazy(() =>
+  import("./views/GestionApplication/application/DetailsApplication")
+);
+
 const routes = [
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", element: Dashboard },
 
   { path: "/login", name: "Login", element: Login },
-  
+
   { path: "/theme", name: "Theme", element: Colors, exact: true },
   { path: "/theme/colors", name: "Colors", element: Colors },
   { path: "/theme/typography", name: "Typography", element: Typography },
@@ -71,6 +85,23 @@ const routes = [
     path: "/maquette/classe/classeDetails/:id",
     name: "DetailsClasse",
     element: DetailsClasse,
+  },
+  // ---------------------------- Application ----------------------------
+  { path: "/application", name: "Application", element: Application },
+  {
+    path: "/maquette/application/ajouterApplication",
+    name: "AjouterApplication",
+    element: AjouterApplication,
+  },
+  {
+    path: "/maquette/application/modifierApplication/:id",
+    name: "ModifierApplication",
+    element: ModifierApplication,
+  },
+  {
+    path: "/maquette/application/detailsApplication/:id",
+    name: "DetailsApplication",
+    element: DetailsApplication,
   },
 ];
 

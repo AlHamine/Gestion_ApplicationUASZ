@@ -24,20 +24,21 @@ import { maxWidth } from "@mui/system";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
-export default function Deploiement() {
-  const [listDeploiement, setListDeploiement] = useState([]);
+export default function Application() {
+  const [listApplication, setListApplication] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage] = useState(10); // Nombre d'éléments par page
   const [currentPage, setCurrentPage] = useState(1); // La page courante
 
   useEffect(() => {
-    fetchDeploiement();
+    fetchApplication();
+    // console.log(listApplication);
   }, []);
 
   const handleSearchChange = (libelle) => {
     setSearchTerm(libelle.target.value);
   };
-  const lastPageNumber = Math.ceil(listDeploiement.length / itemsPerPage);
+  const lastPageNumber = Math.ceil(listApplication.length / itemsPerPage);
 
   const handleChangePaginate = (value) => {
     if (value === -100) {
@@ -47,9 +48,9 @@ export default function Deploiement() {
     } else setCurrentPage(value);
   };
 
-  const fetchDeploiement = () => {
+  const fetchApplication = () => {
     const token = sessionStorage.getItem("jwt");
-    fetch(SERVER_URL + "deploiement", {
+    fetch(SERVER_URL + "application", {
       headers: { Authorization: token },
     })
       .then((response) => {
@@ -61,21 +62,21 @@ export default function Deploiement() {
       .then((data) => {
         // Trier les ateliers par date de création en ordre décroissant
         // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        setListDeploiement(data);
+        setListApplication(data);
       })
-      .catch((error) => console.error("Error fetching Deploiement:", error));
+      .catch((error) => console.error("Error fetching Application:", error));
   };
 
   const onDelClick = (id) => {
-    if (window.confirm("Are you sure to delete de Deploiement?")) {
+    if (window.confirm("Are you sure to delete de Application?")) {
       const token = sessionStorage.getItem("jwt");
-      fetch(SERVER_URL + `deploiement/${id}`, {
+      fetch(SERVER_URL + `application/${id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json", Authorization: token },
       })
         .then((response) => {
           if (response.ok) {
-            fetchDeploiement();
+            fetchApplication();
           } else {
             alert("Une erreur s'est produite lors de la suppression.");
           }
@@ -95,14 +96,20 @@ export default function Deploiement() {
     return dateOnly;
   }
 
-  // Index de la dernière Deploiement à afficher sur la page
+  // Index de la dernière Application à afficher sur la page
   const indexOfLastUE = currentPage * itemsPerPage;
-  // Index de la première Deploiement à afficher sur la page
+  // Index de la première Application à afficher sur la page
   const indexOfFirstUE = indexOfLastUE - itemsPerPage;
-  // Liste des Deploiement à afficher sur la page actuelle
-  const currentUEs = listDeploiement
-    .filter((dep) =>
-      dep.serveur?.toLowerCase().includes(searchTerm.toLowerCase())
+  // Liste des Application à afficher sur la page actuelle
+  //   const currentUEs = listApplication
+  //     .filter((application) =>
+  //       application.serveur?.toLowerCase().includes(searchTerm.toLowerCase())
+  //     )
+  //     .slice(indexOfFirstUE, indexOfLastUE);
+
+  const currentApplications = listApplication
+    .filter((application) =>
+      application.nom.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .slice(indexOfFirstUE, indexOfLastUE);
 
@@ -113,9 +120,9 @@ export default function Deploiement() {
         style={{ marginBottom: "10px" }}
       >
         <div className="text-center">
-          <Link to={"/maquette/dep/AjouterDeploiement"}>
+          <Link to={"/maquette/application/ajouterApplication"}>
             <CButton color="primary" style={{ fontWeight: "bold" }}>
-              Ajouter un Deploiement
+              Ajouter un Application
             </CButton>
           </Link>
         </div>
@@ -126,13 +133,13 @@ export default function Deploiement() {
             <div>
               <div>
                 <strong style={{ display: "block", textAlign: "center" }}>
-                  <h2> Liste des {listDeploiement?.length} Deploiements</h2>
+                  <h2> Liste des {listApplication?.length} Applications </h2>
                 </strong>
               </div>
               <CFormInput
                 type="text"
                 size="sm"
-                placeholder="Rechercher Deploiement par serveur | application | utilisateur | Date de deploiement"
+                placeholder="Rechercher Application par nom | version"
                 aria-label="sm input example"
                 onChange={handleSearchChange}
               />
@@ -146,13 +153,13 @@ export default function Deploiement() {
                     #
                   </CTableHeaderCell>
                   <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
-                    Application
+                    Nom
                   </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Serveur</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Version</CTableHeaderCell>
                   <CTableHeaderCell scope="col">
-                    Date Deploiement
+                    Fonctionnalite
                   </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Utisateur</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Editeur</CTableHeaderCell>
                   <CTableHeaderCell scope="col" className="text-center">
                     Operation
                   </CTableHeaderCell>
@@ -160,25 +167,21 @@ export default function Deploiement() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {currentUEs.map((dep, index) => (
+                {currentApplications.map((application, index) => (
                   <CTableRow key={index}>
                     <CTableHeaderCell style={{ width: "0px" }} scope="row">
-                      {dep.id}
+                      {application.id}
                     </CTableHeaderCell>
-                    <CTableDataCell>{dep?.application}</CTableDataCell>
-                    <CTableDataCell>{dep.serveur}</CTableDataCell>
+                    <CTableDataCell>{application?.nom}</CTableDataCell>
+                    <CTableDataCell>{application.version}</CTableDataCell>
                     <CTableDataCell>
-                      {" "}
-                      {extractDateOnly(dep.date_deploiement)}
+                      {application.fonctionnalite}
                     </CTableDataCell>
-                    <CTableDataCell>{dep.utisateur}</CTableDataCell>
-                    {/* <CTableDataCell>
-                      {dep.description?.length > 15
-                        ? `${dep.description.substring(0, 15)}...`
-                        : dep.description}
-                    </CTableDataCell> */}
+                    <CTableDataCell>{application.editeur}</CTableDataCell>
                     <CTableDataCell className="text-center">
-                      <Link to={`/maquette/dep/ModifierDeploiement/${dep.id}`}>
+                      <Link
+                        to={`/maquette/application/modifierApplication/${application.id}`}
+                      >
                         <CButton
                           color="primary"
                           style={{ fontWeight: "bold", marginRight: "5px" }}
@@ -188,13 +191,12 @@ export default function Deploiement() {
                       </Link>
                       <CButton
                         color="danger"
-                        onClick={() => onDelClick(dep.id)}
+                        onClick={() => onDelClick(application.id)}
                       >
                         <DeleteIcon
                           style={{ color: "white" }}
                           className="icon3"
                         />
-                        {/* <DeleteIcon className="icon3" /> */}
                       </CButton>
                     </CTableDataCell>
                     <CTableDataCell>
@@ -202,21 +204,33 @@ export default function Deploiement() {
                         content={
                           <div>
                             <p>
-                              <strong>Serveur: </strong> {dep.serveur}
+                              <strong>Editeur: </strong> {application.editeur}
                             </p>
                             <p>
-                              <strong>Date deploiement : </strong>{" "}
-                              {dep.date_deploiement}
+                              <strong>Version: </strong> {application.version}
                             </p>
                             <p>
-                              <strong>Utilisateur: </strong> {dep?.utilisateur}
+                              <strong>Fonctionnalite: </strong>{" "}
+                              {application.fonctionnalite}
+                            </p>
+                            <p>
+                              <strong>Categorie:</strong>{" "}
+                              {application.categorie}
+                            </p>
+                            <p>
+                              <strong>Date installation:</strong>{" "}
+                              {application.dateInstallation}
+                            </p>
+                            <p>
+                              <strong>Cout installation:</strong>{" "}
+                              {application.coutInstallation} $
                             </p>
                           </div>
                         }
                         placement="right"
                         title={
                           <div>
-                            <strong>{dep.serveur}</strong>
+                            <strong>{application.nom}</strong>
                           </div>
                         }
                         trigger="focus"
