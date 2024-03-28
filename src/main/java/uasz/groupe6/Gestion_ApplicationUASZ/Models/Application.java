@@ -32,7 +32,7 @@ public class Application {
     private String editeur;
     private String fonctionnalite;
     private String categorie;
-    private Date dateInstallation;
+    private Date dateInstallation = new Date();
     private float coutInstallation;
     // @JsonIgnore
     // @OneToMany
