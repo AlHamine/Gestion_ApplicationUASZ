@@ -50,9 +50,23 @@ const Login = () => {
       body: JSON.stringify(user),
     })
       .then((res) => {
-        const jwtToken = res.headers.get("Authorization");
+         if (!res.ok) {
+           throw new Error("Network response was not ok");
+         }
+        return res.json();
+      })
+      .then((data) => {
+       
+        // const jwtToken = res.headers.get("Authorization");
+        // const r = res.json();
+        const jwtToken = data.token;
+        const id = data.userId;
+        // console.log(r)
         if (jwtToken != null) {
           sessionStorage.setItem("jwt", jwtToken);
+          sessionStorage.setItem("id", id);
+          sessionStorage.setItem("prenom", data.prenom);
+          sessionStorage.setItem("nom", data.nom);
           sessionStorage.setItem("isLoggedIn", true);
           // sessionStorage.setItem("idClient", user.idc);
           sessionStorage.setItem("UserMail", user.username);
@@ -122,7 +136,7 @@ const Login = () => {
                               login();
                               () => {
                                 window.location.href = "/";
-                              }
+                              };
                             }}
                           >
                             Se connecter

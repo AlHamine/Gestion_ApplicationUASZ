@@ -21,7 +21,9 @@ import CancelSharpIcon from "@mui/icons-material/CancelSharp";
 
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 // import DeleteIcon from '@mui/icons-material/Delete'
-import { PersonAdd, Email, Lock } from "@mui/icons-material";
+import { Email, Lock } from "@mui/icons-material";
+import serveurIcon from "./icons8-server-24.png";
+import calendrier from "./icons8-calendar-12-24.png";
 import FileIcon from "@mui/icons-material/FileCopy";
 import { SERVER_URL } from "src/constantURL";
 import { Link } from "react-router-dom";
@@ -34,15 +36,35 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
+  Select,
+  InputLabel,
 } from "@mui/material";
 export default function Deploiement() {
   const [listDeploiement, setListDeploiement] = useState([]);
+  const [listApplication, setListApplication] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage] = useState(10); // Nombre d'éléments par page
   const [currentPage, setCurrentPage] = useState(1); // La page courante
   const [open, setOpen] = useState(false);
+  const [open2, setOpen2] = useState(false);
+  const [serveur, setServeur] = useState("");
+  const [dateDeploiement, setDateDeploiement] = useState("");
+  const [chargerDeploiement, setChargerDeploiement] = useState(null);
   useEffect(() => {
     fetchDeploiement();
+    fetchApplication();
+
+    // Construction des options à partir de listApplication
+    const newOptions = listApplication.map((application) => ({
+      value: application.nom,
+      label: application.nom,
+      icon: serveur, // Utilisation de votre image serveur
+    }));
+
+    // Mise à jour de l'état des options
+    // setOptions(newOptions, ...options);
+    // console.log(options);
   }, []);
 
   const handleSearchChange = (libelle) => {
@@ -58,6 +80,11 @@ export default function Deploiement() {
     } else setCurrentPage(value);
   };
 
+  const [selectedOption, setSelectedOption] = useState("def");
+
+  const handleChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
   const fetchDeploiement = () => {
     const token = sessionStorage.getItem("jwt");
     fetch(SERVER_URL + "deploiement", {
@@ -75,6 +102,92 @@ export default function Deploiement() {
         setListDeploiement(data);
       })
       .catch((error) => console.error("Error fetching Deploiement:", error));
+  };
+  const fetchApplication = () => {
+    const token = sessionStorage.getItem("jwt");
+    fetch(SERVER_URL + "application", {
+      headers: { Authorization: token },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Trier les ateliers par date de création en ordre décroissant
+        // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        setListApplication(data);
+      })
+      .catch((error) => console.error("Error fetching aPPLICATION:", error));
+  };
+  function toDateFr(dateISO) {
+    // Créer un objet Date à partir de la chaîne ISO
+    var dateObj = new Date(dateISO);
+
+    // Options pour le formatage de la date
+    var options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      timeZoneName: "short",
+    };
+
+    // Formater la date en français
+    var dateFrancaise = dateObj.toLocaleString("fr-FR", options);
+
+    return dateFrancaise;
+  }
+  const ajouterDeploiement = () => {
+    const token = sessionStorage.getItem("jwt");
+    const donnee = {
+      application: { id: selectedOption },
+      date_deploiement: dateDeploiement,
+      serveur: serveur,
+      utilisateur: { id: sessionStorage.getItem("id") },
+    };
+    fetch(SERVER_URL + "deploiement", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: token },
+      body: JSON.stringify(donnee),
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("Deploiement ajouter avec succes");
+          window.location.reload();
+        } else {
+          alert("Something went wrong");
+        }
+      })
+      .catch((err) => console.error(err));
+  };
+  const modifierDeploiement = (id) => {
+    const token = sessionStorage.getItem("jwt");
+    const donnee = {
+      id: chargerDeploiement.id,
+      application: { id: selectedOption },
+      date_deploiement: dateDeploiement,
+      serveur: serveur,
+      utilisateur: { id: sessionStorage.getItem("id") },
+    };
+    fetch(SERVER_URL + "deploiement/" + donnee.id, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: token },
+      body: JSON.stringify(donnee),
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("Deploiement modifie avec succes");
+          window.location.reload();
+        } else {
+          alert("Something went wrong");
+        }
+      })
+      .catch((err) => console.error(err));
   };
 
   const onDelClick = (id) => {
@@ -111,6 +224,27 @@ export default function Deploiement() {
   const closeDialog = () => {
     setOpen(false);
   };
+ const openDialog2 = (id) => {
+   // Filtrer le déploiement correspondant à l'ID donné
+   const selectedDeploiement = listDeploiement.find((d) => d.id === id);
+
+   // Mettre à jour les états avec les détails du déploiement sélectionné
+   setChargerDeploiement((prev) => selectedDeploiement);
+   setSelectedOption((prev) => selectedDeploiement?.application?.id);
+   setServeur((prev) => selectedDeploiement?.serveur);
+   setDateDeploiement((prev) => selectedDeploiement?.date_deploiement);
+
+   // Ouvrir la boîte de dialogue
+   setOpen2(true);
+ };
+
+  const closeDialog2 = () => {
+    // setChargerDeploiement(null);
+    // setServeur("");
+    // setDateDeploiement(null);
+    // setSelectedOption("def");
+    setOpen2(false);
+  };
   // Index de la dernière Deploiement à afficher sur la page
   const indexOfLastUE = currentPage * itemsPerPage;
   // Index de la première Deploiement à afficher sur la page
@@ -139,47 +273,65 @@ export default function Deploiement() {
           </CButton>
           {/* </Link> */}
           <Dialog open={open} onClose={closeDialog}>
-            <DialogTitle> Nouveau Client </DialogTitle>
+            <DialogTitle> Ajout d'un Nouveau Deploiement </DialogTitle>
             <DialogContent>
               <Container>
-                <TextField
-                  id="nom"
-                  label="Nom"
-                  variant="outlined"
-                  type="text"
+                <br></br>
+                <InputAdornment position="start">
+                  <img
+                    src={serveurIcon}
+                    alt="Serveur"
+                    style={{ width: "24px", height: "24px" }}
+                  />
+                  Application
+                </InputAdornment>
+
+                {/* <InputAdornment position="start">Application</InputAdornment> */}
+                <br></br>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedOption}
+                  onChange={(event) => setSelectedOption(event.target.value)}
                   fullWidth
-                  onChange={(event) => setNom(event.target.value)}
-                  // value={client.nom}
-                  margin="normal"
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonAdd />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
+                >
+                  <MenuItem value={"def"} disabled>
+                    Selectionner une application
+                  </MenuItem>
+                  {listApplication.map((application) => (
+                    <MenuItem key={application.nom} value={application.id}>
+                      {application.nom} {application.version}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <br></br>
                 <TextField
-                  id="prenom"
+                  id="serveur"
                   type="text"
                   // value={client.prenom}
-                  label="Prénom"
-                  variant="outlined"
+                  label="Serveur"
+                  name="serveur"
+                  variant="filled"
                   fullWidth
-                  margin="normal"
-                  onChange={(event) => setPrenom(event.target.value)}
+                  margin="dense"
+                  onChange={(event) => setServeur(event.target.value)}
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <PersonAdd />
+                        <img
+                          src={serveurIcon}
+                          alt="Serveur"
+                          style={{ width: "24px", height: "24px" }}
+                        />
                       </InputAdornment>
                     ),
                   }}
                 />
+                <br></br>
                 <TextField
-                  id="mail"
-                  type="email"
-                  label="Email"
+                  id="date"
+                  type="date"
+                  label="Date de Deploiement"
                   // value={client.mail}
                   variant="outlined"
                   fullWidth
@@ -187,61 +339,15 @@ export default function Deploiement() {
                   InputProps={{
                     startAdornment: (
                       <InputAdornment position="start">
-                        <Email />
+                        <img
+                          src={calendrier}
+                          alt="Calendrier"
+                          style={{ width: "24px", height: "24px" }}
+                        />
                       </InputAdornment>
                     ),
                   }}
-                  onChange={(event) => setMail(event.target.value)}
-                />
-                <TextField
-                  id="password"
-                  label="Mot de passe"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  type="password"
-                  // value={client.password}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock />
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={(event) => setPassword(event.target.value)}
-                />
-                <TextField
-                  id="confirmPassword"
-                  label="Confirmer Mot de passe"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  type="password"
-                  // value={client.confirmPassword}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <Lock />
-                      </InputAdornment>
-                    ),
-                  }}
-                  onChange={(event) => setConfirmPassword(event.target.value)}
-                />
-                <TextField
-                  id="file"
-                  label="Fichier"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  type="file"
-                  onChange={(event) => setFile(event.target.files[0])}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <FileIcon />
-                      </InputAdornment>
-                    ),
-                  }}
+                  onChange={(event) => setDateDeploiement(event.target.value)}
                 />
               </Container>
             </DialogContent>
@@ -249,9 +355,95 @@ export default function Deploiement() {
               <Button onClick={closeDialog}>
                 <CancelSharpIcon color="error" />
               </Button>
-              <Button
-              // onClick={handleSubmit}
-              >
+              <Button onClick={ajouterDeploiement}>
+                <CheckCircleOutlineIcon color="success" />
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={open2} onClose={closeDialog2}>
+            <DialogTitle> Modification d'un Deploiement </DialogTitle>
+            <DialogContent>
+              <Container>
+                <br></br>
+                <InputAdornment position="start">
+                  <img
+                    src={serveurIcon}
+                    alt="Serveur"
+                    style={{ width: "24px", height: "24px" }}
+                  />
+                  Application
+                </InputAdornment>
+
+                {/* <InputAdornment position="start">Application</InputAdornment> */}
+                <br></br>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={selectedOption}
+                  onChange={(event) => setSelectedOption(event.target.value)}
+                  fullWidth
+                >
+                  <MenuItem value={"def"} disabled>
+                    Selectionner une application
+                  </MenuItem>
+                  {listApplication.map((application) => (
+                    <MenuItem key={application.nom} value={application.id}>
+                      {application.nom} {application.version}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <br></br>
+                <TextField
+                  id="serveur"
+                  type="text"
+                  value={serveur}
+                  label="Serveur"
+                  name="serveur"
+                  variant="filled"
+                  fullWidth
+                  margin="dense"
+                  onChange={(event) => setServeur(event.target.value)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <img
+                          src={serveurIcon}
+                          alt="Serveur"
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                />
+                <br></br>
+                <TextField
+                  id="date"
+                  type="date"
+                  label="Date de Deploiement"
+                  value={extractDateOnly(dateDeploiement)}
+                  variant="outlined"
+                  fullWidth
+                  margin="normal"
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <img
+                          src={calendrier}
+                          alt="Calendrier"
+                          style={{ width: "24px", height: "24px" }}
+                        />
+                      </InputAdornment>
+                    ),
+                  }}
+                  onChange={(event) => setDateDeploiement(event.target.value)}
+                />
+              </Container>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={closeDialog2}>
+                <CancelSharpIcon color="error" />
+              </Button>
+              <Button onClick={modifierDeploiement}>
                 <CheckCircleOutlineIcon color="success" />
               </Button>
             </DialogActions>
@@ -303,7 +495,9 @@ export default function Deploiement() {
                     <CTableHeaderCell style={{ width: "0px" }} scope="row">
                       {dep.id}
                     </CTableHeaderCell>
-                    <CTableDataCell>{dep?.application}</CTableDataCell>
+                    <CTableDataCell>
+                      {dep?.application?.nom} {dep?.application?.version}
+                    </CTableDataCell>
                     <CTableDataCell>{dep.serveur}</CTableDataCell>
                     <CTableDataCell>
                       {" "}
@@ -316,14 +510,15 @@ export default function Deploiement() {
                         : dep.description}
                     </CTableDataCell> */}
                     <CTableDataCell className="text-center">
-                      <Link to={`/maquette/dep/ModifierDeploiement/${dep.id}`}>
-                        <CButton
-                          color="primary"
-                          style={{ fontWeight: "bold", marginRight: "5px" }}
-                        >
-                          <EditIcon className="icon4" />
-                        </CButton>
-                      </Link>
+                      {/* <Link to={`/maquette/dep/ModifierDeploiement/${dep.id}`}> */}
+                      <CButton
+                        color="primary"
+                        onClick={() => openDialog2(dep.id)}
+                        style={{ fontWeight: "bold", marginRight: "5px" }}
+                      >
+                        <EditIcon className="icon4" />
+                      </CButton>
+                      {/* </Link> */}
                       <CButton
                         color="danger"
                         onClick={() => onDelClick(dep.id)}
@@ -347,7 +542,24 @@ export default function Deploiement() {
                               {dep.date_deploiement}
                             </p>
                             <p>
-                              <strong>Utilisateur: </strong> {dep?.utilisateur}
+                              <strong>Application: </strong> <br />
+                              <b>Nom & Version: </b>
+                              {dep?.application.nom} {dep?.application.version}
+                              <br />
+                              <b>Editeur: </b>
+                              {dep?.application.editeur}
+                              <br />
+                              <b>Fonctionnalite: </b>
+                              {dep?.application.fonctionnalite}
+                              <br />
+                              <b>Categorie: </b>
+                              {dep?.application.categorie} <br />
+                              <b>Installe le : </b>
+                              {toDateFr(dep?.application.dateInstallation)}{" "}
+                            </p>
+                            <p>
+                              <strong>Utilisateur: </strong>{" "}
+                              {dep?.utilisateur?.prenom} {dep?.utilisateur?.nom}
                             </p>
                           </div>
                         }
