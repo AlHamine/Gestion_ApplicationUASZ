@@ -224,19 +224,19 @@ export default function Deploiement() {
   const closeDialog = () => {
     setOpen(false);
   };
- const openDialog2 = (id) => {
-   // Filtrer le déploiement correspondant à l'ID donné
-   const selectedDeploiement = listDeploiement.find((d) => d.id === id);
+  const openDialog2 = (id) => {
+    // Filtrer le déploiement correspondant à l'ID donné
+    const selectedDeploiement = listDeploiement.find((d) => d.id === id);
 
-   // Mettre à jour les états avec les détails du déploiement sélectionné
-   setChargerDeploiement((prev) => selectedDeploiement);
-   setSelectedOption((prev) => selectedDeploiement?.application?.id);
-   setServeur((prev) => selectedDeploiement?.serveur);
-   setDateDeploiement((prev) => selectedDeploiement?.date_deploiement);
+    // Mettre à jour les états avec les détails du déploiement sélectionné
+    setChargerDeploiement((prev) => selectedDeploiement);
+    setSelectedOption((prev) => selectedDeploiement?.application?.id);
+    setServeur((prev) => selectedDeploiement?.serveur);
+    setDateDeploiement((prev) => selectedDeploiement?.date_deploiement);
 
-   // Ouvrir la boîte de dialogue
-   setOpen2(true);
- };
+    // Ouvrir la boîte de dialogue
+    setOpen2(true);
+  };
 
   const closeDialog2 = () => {
     // setChargerDeploiement(null);
@@ -251,8 +251,22 @@ export default function Deploiement() {
   const indexOfFirstUE = indexOfLastUE - itemsPerPage;
   // Liste des Deploiement à afficher sur la page actuelle
   const currentUEs = listDeploiement
-    .filter((dep) =>
-      dep.serveur?.toLowerCase().includes(searchTerm.toLowerCase())
+    .filter(
+      (dep) =>
+        dep.serveur?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        dep.application?.nom
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        dep.application?.version
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        dep.date_deploiement
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        dep.utilisateur?.prenom
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
+        dep.utilisateur?.nom?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .slice(indexOfFirstUE, indexOfLastUE);
 
@@ -503,7 +517,9 @@ export default function Deploiement() {
                       {" "}
                       {extractDateOnly(dep.date_deploiement)}
                     </CTableDataCell>
-                    <CTableDataCell>{dep.utisateur}</CTableDataCell>
+                    <CTableDataCell>
+                      {dep.utilisateur?.prenom} {dep.utilisateur?.nom}
+                    </CTableDataCell>
                     {/* <CTableDataCell>
                       {dep.description?.length > 15
                         ? `${dep.description.substring(0, 15)}...`
