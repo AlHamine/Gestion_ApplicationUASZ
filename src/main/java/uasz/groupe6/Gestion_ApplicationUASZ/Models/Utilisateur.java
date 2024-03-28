@@ -2,6 +2,8 @@ package uasz.groupe6.Gestion_ApplicationUASZ.Models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,6 +25,7 @@ public class Utilisateur {
     private String nom;
     @Column(nullable = false)
     private String role;
+    @JsonIgnore
     @OneToMany(mappedBy = "utilisateur")
     private List<Deploiement> deploiements;
 }
