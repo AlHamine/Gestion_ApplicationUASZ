@@ -40,8 +40,8 @@ public class Application {
     // @ManyToOne
     // private Rapport Rapport;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(mappedBy ="application" )
     private List<Deploiement> deploiement;
-    // @ManyToOne
-    // private Utilisateur Utilisateur;
+    @ManyToOne
+    private Utilisateur Utilisateur;
 }

@@ -22,7 +22,7 @@ public class UtilisateurService {
     }
 
     @Transactional
-    public Utilisateur createUser(String mail, String password, String photo, String role) {
+    public Utilisateur createUser(String mail, String password, String prenom, String nom, String role) {
         // Vérifiez si un utilisateur avec la même adresse e-mail existe déjà
         // Utilisateur existingUser = userRepository.findByMail(mail).get();
 
@@ -35,6 +35,8 @@ public class UtilisateurService {
         Utilisateur user = new Utilisateur();
         user.setMail(mail);
         user.setPassword(passwordEncoder.encode(password));
+        user.setPrenom(prenom);
+        user.setNom(nom);
         // user.setPhoto(photo);
         user.setRole(role);
 
