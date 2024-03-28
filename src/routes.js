@@ -70,7 +70,7 @@ const routes = [
   // --------------------- AJOUT DES ELEMENTS ---------------------
   // ########################## Maquette ##########################
   // ---------------------------- Deploiement ----------------------------
-  { path: "/deploiement", name: "Classe", element: Deploiement },
+  { path: "/deploiement", name: "Deploiement", element: Deploiement },
   {
     path: "/maquette/classe/AjouterClasse",
     name: "AjouterClasse",
