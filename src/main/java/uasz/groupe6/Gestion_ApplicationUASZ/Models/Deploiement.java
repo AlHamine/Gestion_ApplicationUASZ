@@ -25,7 +25,8 @@ public class Deploiement {
     private Long id;
     private String serveur;
     private Date date_deploiement;
-    // private Application application;
+    @ManyToOne
+    private Application application;
     @ManyToOne
     private Utilisateur utilisateur;
 
