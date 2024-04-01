@@ -2,6 +2,7 @@ package uasz.groupe6.Gestion_ApplicationUASZ.Services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -12,11 +13,16 @@ import uasz.groupe6.Gestion_ApplicationUASZ.Repository.ApplicationRepository;
 @Service
 @AllArgsConstructor
 public class ApplicationService {
-    
+
     private ApplicationRepository applicationRepository;
 
     public List<Application> afficherToutApplication() {
         return applicationRepository.findAll();
+    }
+
+    public List<Application> afficherToutApplicationGratuite() {
+        return applicationRepository.findAll().stream().filter(a -> a.getLicenses() == null)
+                .collect(Collectors.toList());
     }
 
     public Application ajoutApplication(Application application) {
@@ -41,7 +47,7 @@ public class ApplicationService {
     public Application modifierApplication(Application appToUpdate) {
         Application editApplication = rechercheApplication(appToUpdate.getId());
 
-        if(editApplication != null) {
+        if (editApplication != null) {
             editApplication.setCategorie(appToUpdate.getCategorie());
             editApplication.setCoutInstallation(appToUpdate.getCoutInstallation());
             editApplication.setDateInstallation(appToUpdate.getDateInstallation());
