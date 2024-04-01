@@ -10,8 +10,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import uasz.groupe6.Gestion_ApplicationUASZ.Models.Deploiement;
+import uasz.groupe6.Gestion_ApplicationUASZ.Models.Licence;
 import uasz.groupe6.Gestion_ApplicationUASZ.Models.Utilisateur;
 import uasz.groupe6.Gestion_ApplicationUASZ.Services.DeploiementService;
+import uasz.groupe6.Gestion_ApplicationUASZ.Services.LicenceService;
 import uasz.groupe6.Gestion_ApplicationUASZ.Services.UtilisateurService;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +27,7 @@ public class GestionApplicationUaszApplication implements CommandLineRunner {
 	private ApplicationService applicationService;
 	private DeploiementService deploiementService;
 	private UtilisateurService utilisateurService;
+	private LicenceService licenceService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(GestionApplicationUaszApplication.class, args);
@@ -49,9 +52,20 @@ public class GestionApplicationUaszApplication implements CommandLineRunner {
 		Application app2 = applicationService
 				.ajoutApplication(new Application(null, "Avast", "11", "Avast inco", "Proteger la machine,Antivirus",
 						"new Categorie", new Date(), 25, null, user3));
+		
 
 		Deploiement d1 = deploiementService
 				.ajoutDeploiement(new Deploiement(null, "google.com", new Date(), app1, user1));
+
+		Licence licence1= licenceService.ajoutLicence(new Licence());
+		licence1.setType("Standard");
+		licence1.setDate_Expiration(new Date());
+		licence1.setNbre_Utilisateur(1);
+		licence1.setCout_Licence(100.0f);
+		licence1.setMethode_Paiement("Carte Bancaire");
+
+
+		
 
 		for (int i = 0; i < 10; i++) {
 			String serveur = "Serveur" + (i + 1); // Serveur fictif

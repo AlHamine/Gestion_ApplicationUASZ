@@ -1,7 +1,6 @@
 package uasz.groupe6.Gestion_ApplicationUASZ.Models;
 
-import java.sql.Date;
-
+import java.util.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +21,7 @@ public class Licence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
-    private Date Date_Expiration;
+    private Date Date_Expiration = new Date();
     private int Nbre_Utilisateur;
     private float Cout_Licence;
     private String Methode_Paiement;
