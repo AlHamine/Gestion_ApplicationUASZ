@@ -555,7 +555,7 @@ export default function Deploiement() {
                             </p>
                             <p>
                               <strong>Date deploiement : </strong>{" "}
-                              {dep.date_deploiement}
+                              {toDateFr(dep.date_deploiement)}
                             </p>
                             <p>
                               <strong>Application: </strong> <br />

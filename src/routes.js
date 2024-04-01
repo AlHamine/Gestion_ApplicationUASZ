@@ -28,6 +28,9 @@ const Widgets = React.lazy(() => import("./views/widgets/Widgets"));
 // Ajout de nouvelle routes
 
 // ---------------------------- Deploiement ----------------------------
+const Rapport = React.lazy(() =>
+  import("./views/GestionApplication/rapport/Rapport")
+);
 const Deploiement = React.lazy(() =>
   import("./views/GestionApplication/deploiement/Deploiement")
 );
@@ -71,20 +74,11 @@ const routes = [
   // ########################## Maquette ##########################
   // ---------------------------- Deploiement ----------------------------
   { path: "/deploiement", name: "Deploiement", element: Deploiement },
+  { path: "/rapport", name: "Rapport", element: Rapport },
   {
-    path: "/maquette/classe/AjouterClasse",
-    name: "AjouterClasse",
-    element: AjouterClasse,
-  },
-  {
-    path: "/maquette/classe/ModifierClasse/:id",
-    name: "ModifierClasse",
-    element: ModifierClasse,
-  },
-  {
-    path: "/maquette/classe/classeDetails/:id",
-    name: "DetailsClasse",
-    element: DetailsClasse,
+    path: "/rapport/detailsRapport/:id",
+    name: "DetailsApplication",
+    element: DetailsApplication,
   },
   // ---------------------------- Application ----------------------------
   { path: "/application", name: "Application", element: Application },
