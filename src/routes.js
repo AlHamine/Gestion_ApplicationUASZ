@@ -31,6 +31,9 @@ const Widgets = React.lazy(() => import("./views/widgets/Widgets"));
 const Rapport = React.lazy(() =>
   import("./views/GestionApplication/rapport/Rapport")
 );
+const Licence = React.lazy(() =>
+  import("./views/GestionApplication/Licence/Licence")
+);
 const Deploiement = React.lazy(() =>
   import("./views/GestionApplication/deploiement/Deploiement")
 );
@@ -74,6 +77,7 @@ const routes = [
   // ########################## Maquette ##########################
   // ---------------------------- Deploiement ----------------------------
   { path: "/deploiement", name: "Deploiement", element: Deploiement },
+  { path: "/licence", name: "Licence", element: Licence },
   { path: "/rapport", name: "Rapport", element: Rapport },
   {
     path: "/rapport/detailsRapport/:id",
