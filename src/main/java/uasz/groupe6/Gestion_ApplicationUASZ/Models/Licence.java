@@ -1,11 +1,13 @@
 package uasz.groupe6.Gestion_ApplicationUASZ.Models;
 
 import java.sql.Date;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 // import jakarta.persistence.ManyToOne;
 // import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -27,8 +29,8 @@ public class Licence {
     private float Cout_Licence;
     private String Methode_Paiement;
 
-    // @ManyToOne
-    // private String Rapport;
+    @ManyToMany
+    private List<Rapport> Rapport;
 
     // @OneToOne
     // private String Application;

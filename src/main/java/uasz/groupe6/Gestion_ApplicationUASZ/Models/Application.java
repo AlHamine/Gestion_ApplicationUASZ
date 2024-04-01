@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -34,14 +35,18 @@ public class Application {
     private String categorie;
     private Date dateInstallation = new Date();
     private float coutInstallation;
-    // @JsonIgnore
-    // @OneToMany
-    // private List<License> licenses;
+    @JsonIgnore
+    @OneToMany
+    private List<Licence> licenses;
     // @ManyToOne
     // private Rapport Rapport;
     @JsonIgnore
-    @OneToMany(mappedBy ="application" )
+    @OneToMany(mappedBy = "application")
     private List<Deploiement> deploiement;
     @ManyToOne
     private Utilisateur Utilisateur;
+
+    @ManyToMany
+    private List<Rapport> Rapport;
+
 }

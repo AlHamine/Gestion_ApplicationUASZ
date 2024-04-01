@@ -13,7 +13,7 @@ import uasz.groupe6.Gestion_ApplicationUASZ.Models.Deploiement;
 import uasz.groupe6.Gestion_ApplicationUASZ.Models.Utilisateur;
 import uasz.groupe6.Gestion_ApplicationUASZ.Services.DeploiementService;
 import uasz.groupe6.Gestion_ApplicationUASZ.Services.UtilisateurService;
-
+// import java.sql.*;
 import lombok.AllArgsConstructor;
 import uasz.groupe6.Gestion_ApplicationUASZ.Models.Application;
 import uasz.groupe6.Gestion_ApplicationUASZ.Services.ApplicationService;
@@ -44,20 +44,20 @@ public class GestionApplicationUaszApplication implements CommandLineRunner {
 
 		Application app1 = applicationService
 				.ajoutApplication(new Application(null, "Windows", "11", "Microsoft", "utiliser app mobile",
-						"new Categorie", new Date(), 25, null, user1));
+						"new Categorie", new Date(), 25, null, null, user1,null));
 
 		Application app2 = applicationService
 				.ajoutApplication(new Application(null, "Avast", "11", "Avast inco", "Proteger la machine,Antivirus",
-						"new Categorie", new Date(), 25, null, user3));
+						"new Categorie", new Date(), 25, null, null, user3, null));
 
 		Deploiement d1 = deploiementService
-				.ajoutDeploiement(new Deploiement(null, "google.com", new Date(), app1, user1));
+				.ajoutDeploiement(new Deploiement(null, "google.com", new Date(), app1, user1, null));
 
 		for (int i = 0; i < 10; i++) {
 			String serveur = "Serveur" + (i + 1); // Serveur fictif
 			Date dateDeploiement = (i % 2 == 0) ? date1 : date2; // Alterner entre les deux dates fictives
 			Application app = (i % 2 == 0) ? app1 : app2; // Alterner entre les deux dates fictives
-			deploiementService.ajoutDeploiement(new Deploiement(null, serveur, dateDeploiement, app, user1));
+			deploiementService.ajoutDeploiement(new Deploiement(null, serveur, dateDeploiement, app, user1,null));
 		}
 
 		for (Deploiement d : deploiementService.afficherToutDeploiement()) {
