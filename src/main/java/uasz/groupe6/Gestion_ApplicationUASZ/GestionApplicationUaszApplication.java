@@ -62,6 +62,7 @@ public class GestionApplicationUaszApplication implements CommandLineRunner {
 		licence1.setNbre_Utilisateur(1);
 		licence1.setCout_Licence(100.0f);
 		licence1.setMethode_Paiement("Carte Bancaire");
+		licence1.setApplication(app1);
 
 
 		
