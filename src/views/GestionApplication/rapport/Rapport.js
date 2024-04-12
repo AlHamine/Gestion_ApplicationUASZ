@@ -28,18 +28,17 @@ import FileIcon from "@mui/icons-material/FileCopy";
 import { SERVER_URL } from "src/constantURL";
 import { Link } from "react-router-dom";
 import { maxWidth } from "@mui/system";
-import EditIcon from "@mui/icons-material/Edit";
+import DownloadIcon from "@mui/icons-material/Download";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Button, TextField, InputAdornment, Container } from "@mui/material";
+import PDFComponent from "./PDFComponent";
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  MenuItem,
-  Select,
-  InputLabel,
 } from "@mui/material";
+import { Container, Typography, Divider, Button } from "@mui/material"; // Importer les composants nécessaires depuis Material-UI
+
 export default function Rapport() {
   const [listRapport, setListRapport] = useState([]);
   // const [listApplication, setListApplication] = useState([]);
@@ -67,7 +66,9 @@ export default function Rapport() {
       setCurrentPage(currentPage - 1);
     } else setCurrentPage(value);
   };
-
+  const handlePDFDownload = (selectedRapport) => {
+    PDFComponent({ rapportSelected: selectedRapport });
+  };
   const [selectedOption, setSelectedOption] = useState("def");
 
   const handleChange = (event) => {
@@ -234,52 +235,45 @@ export default function Rapport() {
   const indexOfFirstUE = indexOfLastUE - itemsPerPage;
   // Liste des Rapport à afficher sur la page actuelle
   const currentUEs = listRapport
-    .filter((dep) => dep.date?.toLowerCase().includes(searchTerm.toLowerCase()))
+    .filter((rapportSelected) =>
+      rapportSelected.date?.toLowerCase().includes(searchTerm.toLowerCase())
+    )
     .slice(indexOfFirstUE, indexOfLastUE);
   function convertirDateFrancais(dateStr) {
-    // Découper la date en parties
-    const [annee, mois, jour] = dateStr.split("-");
+    // Créer un objet Date à partir de la chaîne ISO
+    var dateObj = new Date(dateStr);
 
-    // Obtenir les noms des mois en français
-    const moisEnFrancais = [
-      "janvier",
-      "février",
-      "mars",
-      "avril",
-      "mai",
-      "juin",
-      "juillet",
-      "août",
-      "septembre",
-      "octobre",
-      "novembre",
-      "décembre",
-    ];
-
-    // Convertir le mois en nombre
-    const moisNum = parseInt(mois) - 1;
+    // Options pour le formatage de la date
+    var options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
 
     // Formater la date en français
-    const dateFr = `${jour} ${moisEnFrancais[moisNum]} ${annee}`;
+    var dateFrancaise = dateObj.toLocaleString("fr-FR", options);
 
-    // Retourner la date formatée
-    return dateFr;
+    return dateFrancaise;
   }
 
   return (
     <CRow>
       <div
         className="d-grid gap-2 col-6 mx-auto"
-        style={{ marginBottom: "10px" }}
+        style={{ marginBottom: "10px", color: "red" }}
       >
         <div className="text-center">
-          {/* <Link to={"/maquette/dep/AjouterRapport"}> */}
+          {/* <Link to={"/maquette/rapportSelected/AjouterRapport"}> */}
           <CButton
             color="primary"
             style={{ fontWeight: "bold" }}
             onClick={ajouterRapport}
           >
-            Ajouter un Rapport
+            Generer un Rapport
           </CButton>
         </div>
       </div>
@@ -330,83 +324,234 @@ export default function Rapport() {
                 </CTableRow>
               </CTableHead>
               <CTableBody>
-                {currentUEs.map((dep, index) => (
+                {currentUEs.map((rapportSelected, index) => (
                   <CTableRow key={index}>
                     <CTableHeaderCell style={{ width: "0px" }} scope="row">
-                      {dep.id}
+                      {rapportSelected.id}
                     </CTableHeaderCell>
-                    <CTableDataCell>{dep?.nbApplication}</CTableDataCell>
-                    <CTableDataCell>{dep.nbApplicationGratuite}</CTableDataCell>
-                    <CTableDataCell>{dep.nbLicence}</CTableDataCell>
-
-                    <CTableDataCell> {dep.nbDeploiement}</CTableDataCell>
+                    <CTableDataCell>
+                      {rapportSelected?.nbApplication}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {rapportSelected.nbApplicationGratuite}
+                    </CTableDataCell>
+                    <CTableDataCell>{rapportSelected.nbLicence}</CTableDataCell>
 
                     <CTableDataCell>
-                      {convertirDateFrancais(dep.date)}
+                      {" "}
+                      {rapportSelected.nbDeploiement}
+                    </CTableDataCell>
+
+                    <CTableDataCell>
+                      {convertirDateFrancais(rapportSelected.date)}
                     </CTableDataCell>
                     <CTableDataCell className="text-center">
-                      {/* <Link to={`/maquette/dep/ModifierRapport/${dep.id}`}> */}
-                      {/* <CButton
-                        color="primary"
-                        onClick={() => openDialog2(dep.id)}
-                        style={{ fontWeight: "bold", marginRight: "5px" }}
-                      >
-                        <EditIcon className="icon4" />
-                      </CButton> */}
-                      {/* </Link> */}
                       <CButton
                         color="danger"
-                        onClick={() => onDelClick(dep.id)}
+                        onClick={() => onDelClick(rapportSelected.id)}
                       >
                         <DeleteIcon
                           style={{ color: "white" }}
                           className="icon3"
                         />
-                        {/* <DeleteIcon className="icon3" /> */}
+                      </CButton>
+                      <CButton
+                        color="success"
+                        style={{ color: "white" }}
+                        onClick={() => handlePDFDownload(rapportSelected)}
+                      >
+                        <DownloadIcon />
                       </CButton>
                     </CTableDataCell>
                     <CTableDataCell>
+                      <Dialog open={open} onClose={closeDialog}>
+                        <DialogTitle className="textCenter">
+                          {" "}
+                          <strong>
+                            {" "}
+                            Rapport du{" "}
+                            {convertirDateFrancais(rapportSelected.date)}{" "}
+                          </strong>
+                        </DialogTitle>
+                        <DialogContent>
+                          <Container>
+                            <br />
+                            <Typography variant="h6">
+                              <strong> Applications payantes :</strong>
+                            </Typography>
+
+                            {rapportSelected.applications.map((application) => (
+                              <div>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Nom:</strong> {application.nom}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Editeur:</strong>{" "}
+                                  {application.editeur}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Version:</strong>{" "}
+                                  {application.version}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Fonctionnalité:</strong>{" "}
+                                  {application.fonctionnalite}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Catégorie:</strong>{" "}
+                                  {application.categorie}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Date d'installation:</strong>{" "}
+                                  {convertirDateFrancais(
+                                    application.dateInstallation
+                                  )}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Cout d'installation:</strong>{" "}
+                                  {application.coutInstallation} francs cfa
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Enregistrée par:</strong>{" "}
+                                  {application.utilisateur}
+                                </Typography>
+
+                                <Divider />
+                                <br />
+                              </div>
+                            ))}
+                          </Container>
+                          <hr></hr>
+                          <Container>
+                            <br />
+                            <Typography variant="h6">
+                              <strong>Les Licences :</strong>
+                            </Typography>
+
+                            {rapportSelected.licences.map((licence) => (
+                              <div>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Type:</strong> {licence.type}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Nombre d'utilisateur:</strong>{" "}
+                                  {licence.nbre_Utilisateur}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Cout et Methode de paiement:</strong>{" "}
+                                  {licence.cout_Licence} francs cfa{" "}
+                                  {licence.methode_Paiement}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Application concernée:</strong>{" "}
+                                  {licence.application.nom}{" "}
+                                  {licence.application.version}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Enregistrée par:</strong>{" "}
+                                  {licence.application.utilisateur}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>
+                                    Date d'expiration de la licence:
+                                  </strong>{" "}
+                                  {convertirDateFrancais(
+                                    licence.date_Expiration
+                                  )}
+                                </Typography>
+
+                                <Divider />
+                                <br />
+                              </div>
+                            ))}
+                          </Container>
+                          <hr></hr>
+                          <hr></hr>
+                          <Container>
+                            <br />
+                            <Typography variant="h6">
+                              <strong>Les Deploiements :</strong>
+                            </Typography>
+
+                            {rapportSelected.deploiements.map((deploiement) => (
+                              <div>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Serveur:</strong>{" "}
+                                  {deploiement.serveur}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Date de Deploiement:</strong>{" "}
+                                  {convertirDateFrancais(
+                                    deploiement.date_deploiement
+                                  )}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Application concernée:</strong>{" "}
+                                  {deploiement.application.nom}{" "}
+                                  {deploiement.application.version}
+                                </Typography>
+                                <Typography variant="subtitle1" gutterBottom>
+                                  <strong>Enregistrée par:</strong>{" "}
+                                  {deploiement.utilisateur}
+                                </Typography>
+
+                                <Divider />
+                                <br />
+                              </div>
+                            ))}
+                          </Container>
+                        </DialogContent>
+                        <DialogActions>
+                          <Button onClick={closeDialog}>
+                            <CancelSharpIcon color="error" />
+                            Fermer
+                          </Button>
+                        </DialogActions>
+                      </Dialog>
+
                       <CPopover
                         content={
                           <div>
                             <p>
-                              <strong>Rapport: </strong> {dep.serveur}
+                              <strong>
+                                Rapport du{" "}
+                                {convertirDateFrancais(rapportSelected.date)}{" "}
+                              </strong>
                             </p>
-                            <p>
-                              <strong>Date rapport : </strong>{" "}
-                              {convertirDateFrancais(dep.date)}
-                            </p>
+
                             {/* <p>
                               <strong>Application: </strong> <br />
                               <b>Nom & Version: </b>
-                              {dep?.application.nom} {dep?.application.version}
+                              {rapportSelected?.application.nom} {rapportSelected?.application.version}
                               <br />
                               <b>Editeur: </b>
-                              {dep?.application.editeur}
+                              {rapportSelected?.application.editeur}
                               <br />
                               <b>Fonctionnalite: </b>
-                              {dep?.application.fonctionnalite}
+                              {rapportSelected?.application.fonctionnalite}
                               <br />
                               <b>Categorie: </b>
-                              {dep?.application.categorie} <br />
+                              {rapportSelected?.application.categorie} <br />
                               <b>Installe le : </b>
-                              {toDateFr(dep?.application.dateInstallation)}{" "}
+                              {toDateFr(rapportSelected?.application.dateInstallation)}{" "}
                             </p> */}
                             {/* <p>
                               <strong>Utilisateur: </strong>{" "}
-                              {dep?.utilisateur?.prenom} {dep?.utilisateur?.nom}
+                              {rapportSelected?.utilisateur?.prenom} {rapportSelected?.utilisateur?.nom}
                             </p> */}
                           </div>
                         }
                         placement="right"
                         title={
                           <div>
-                            <strong>{dep.serveur}</strong>
+                            <strong>{rapportSelected.serveur}</strong>
                           </div>
                         }
                         trigger="focus"
                       >
-                        <CButton color="info">Detail</CButton>
+                        <CButton onClick={openDialog} color="info">
+                          Detail
+                        </CButton>
                       </CPopover>
                     </CTableDataCell>
                   </CTableRow>
