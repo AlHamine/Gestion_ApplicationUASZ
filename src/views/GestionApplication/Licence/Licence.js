@@ -41,6 +41,7 @@ import {
   InputLabel,
 } from "@mui/material";
 export default function Licence() {
+ 
   const [listLicence, setListLicence] = useState([]);
   const [listApplication, setListApplication] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -100,9 +101,10 @@ export default function Licence() {
         // Trier les ateliers par date de création en ordre décroissant
         // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         setListLicence(data);
-        console.log(listLicence);
+        console.log(listLicence)
+        
+        console.log(data)
 
-        console.log(data);
       })
       .catch((error) => console.error("Error fetching Licence:", error));
   };
@@ -256,9 +258,7 @@ export default function Licence() {
   const currentUEs = listLicence
     .filter(
       (licenceActuel) =>
-        licenceActuel.serveur
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase()) ||
+        licenceActuel.serveur?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         licenceActuel.application?.nom
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
@@ -271,9 +271,7 @@ export default function Licence() {
         licenceActuel.utilisateur?.prenom
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        licenceActuel.utilisateur?.nom
-          ?.toLowerCase()
-          .includes(searchTerm.toLowerCase())
+        licenceActuel.utilisateur?.nom?.toLowerCase().includes(searchTerm.toLowerCase())
     )
     .slice(indexOfFirstUE, indexOfLastUE);
 
@@ -496,25 +494,28 @@ export default function Licence() {
                   <CTableHeaderCell scope="col" style={{ maxWidth: "0px" }}>
                     #
                   </CTableHeaderCell>
-
+                 
                   <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
                     Type
                   </CTableHeaderCell>
-
+                 
                   <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
                     Date_Expiration
                   </CTableHeaderCell>
                   <CTableHeaderCell scope="col">Serveur</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Cout</CTableHeaderCell>
-                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
-                    Methode_Paiement
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Application</CTableHeaderCell>
-
                   <CTableHeaderCell scope="col">
-                    Nbre_Utilisateur
+                    Cout
                   </CTableHeaderCell>
-
+                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
+                  Methode_Paiement
+                  </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">
+                    Application
+                  </CTableHeaderCell>
+                 
+                  <CTableHeaderCell scope="col">Nbre_Utilisateur</CTableHeaderCell>
+                 
+                 
                   <CTableHeaderCell scope="col" className="text-center">
                     Operation
                   </CTableHeaderCell>
@@ -527,23 +528,23 @@ export default function Licence() {
                     <CTableHeaderCell style={{ width: "0px" }} scope="row">
                       {licenceActuel.id}
                     </CTableHeaderCell>
-                    <CTableDataCell>{licenceActuel?.type}</CTableDataCell>
                     <CTableDataCell>
-                      {extractDateOnly(licenceActuel.date_Expiration)}
+                      {licenceActuel?.type}
                     </CTableDataCell>
+                    <CTableDataCell>{extractDateOnly(licenceActuel.date_Expiration)}</CTableDataCell>
                     <CTableDataCell>
+                     
                       {licenceActuel.cout_Licence}
                     </CTableDataCell>
                     <CTableDataCell>
                       {licenceActuel.methode_Paiement}
                     </CTableDataCell>
-                    <CTableDataCell>
+                   <CTableDataCell>
                       {licenceActuel.nbre_Utilisateur}
-                    </CTableDataCell>
+                    </CTableDataCell> 
                     <CTableDataCell>
-                      {licenceActuel?.application?.nom} version{" "}
-                      {licenceActuel?.application?.version}
-                    </CTableDataCell>
+                      {licenceActuel?.application?.nom} version {licenceActuel?.application?.version}
+                    </CTableDataCell> 
                     <CTableDataCell className="text-center">
                       {/* <Link to={`/maquette/licenceActuel/ModifierLicence/${licenceActuel.id}`}> */}
                       <CButton
@@ -579,8 +580,7 @@ export default function Licence() {
                             <p>
                               <strong>Application: </strong> <br />
                               <b>Nom & Version: </b>
-                              {licenceActuel?.application.nom}{" "}
-                              {licenceActuel?.application.version}
+                              {licenceActuel?.application.nom} {licenceActuel?.application.version}
                               <br />
                               <b>Editeur: </b>
                               {licenceActuel?.application.editeur}
@@ -591,14 +591,11 @@ export default function Licence() {
                               <b>Categorie: </b>
                               {licenceActuel?.application.categorie} <br />
                               <b>Installe le : </b>
-                              {toDateFr(
-                                licenceActuel?.application.dateInstallation
-                              )}{" "}
+                              {toDateFr(licenceActuel?.application.dateInstallation)}{" "}
                             </p>
                             <p>
                               <strong>Utilisateur: </strong>{" "}
-                              {licenceActuel?.utilisateur?.prenom}{" "}
-                              {licenceActuel?.utilisateur?.nom}
+                              {licenceActuel?.utilisateur?.prenom} {licenceActuel?.utilisateur?.nom}
                             </p>
                           </div>
                         }
