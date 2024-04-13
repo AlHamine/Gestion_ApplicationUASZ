@@ -41,27 +41,50 @@ import {
   InputLabel,
 } from "@mui/material";
 export default function Licence() {
- 
   const [listLicence, setListLicence] = useState([]);
   const [listApplication, setListApplication] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage] = useState(10); // Nombre d'éléments par page
   const [currentPage, setCurrentPage] = useState(1); // La page courante
   const [open, setOpen] = useState(false);
+  const [openAlert, setOpenAlert] = useState(false);
   const [open2, setOpen2] = useState(false);
   const [serveur, setServeur] = useState("");
   const [dateLicence, setDateLicence] = useState("");
   const [chargerLicence, setChargerLicence] = useState(null);
+  function checkLicenseExpiry() {
+    const currentDate = new Date();
+
+    listLicence.forEach((licence) => {
+      const expirationDate = new Date(licence.date_Expiration);
+      // Comparaison de la date d'expiration avec la date actuelle
+      if (expirationDate <= currentDate) {
+        // Générer une alerte si la licence est expirée
+        alert(`La licence pour ${licence.application.nom} a expiré.`);
+        openAlertFunction();
+      } else if (expirationDate - currentDate < 7 * 24 * 60 * 60 * 1000) {
+        // Générer une alerte si la licence expire dans moins d'une semaine
+        alert(
+          `Attention ! La licence pour ${licence.application.nom} expire bientôt.`
+        );
+      }
+    });
+  }
+
+  // Vérifier les dates d'expiration toutes les 24 heures (86400000 ms)
+  setInterval(checkLicenseExpiry, 86400000);
+
   useEffect(() => {
     fetchLicence();
     fetchApplication();
+    checkLicenseExpiry();
 
-    // Construction des options à partir de listApplication
-    const newOptions = listApplication.map((application) => ({
-      value: application.nom,
-      label: application.nom,
-      icon: serveur, // Utilisation de votre image serveur
-    }));
+    // // Construction des options à partir de listApplication
+    // const newOptions = listApplication.map((application) => ({
+    //   value: application.nom,
+    //   label: application.nom,
+    //   icon: serveur, // Utilisation de votre image serveur
+    // }));
 
     // Mise à jour de l'état des options
     // setOptions(newOptions, ...options);
@@ -101,12 +124,12 @@ export default function Licence() {
         // Trier les ateliers par date de création en ordre décroissant
         // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         setListLicence(data);
-        console.log(listLicence)
-        
-        console.log(data)
+        console.log(listLicence);
 
+        console.log(data);
       })
       .catch((error) => console.error("Error fetching Licence:", error));
+    checkLicenseExpiry();
   };
   const fetchApplication = () => {
     const token = sessionStorage.getItem("jwt");
@@ -250,6 +273,13 @@ export default function Licence() {
     // setSelectedOption("def");
     setOpen2(false);
   };
+  const closeAlert = () => {
+    setOpenAlert(false);
+  };
+
+  const openAlertFunction = () => {
+    setOpenAlert(true);
+  };
   // Index de la dernière Licence à afficher sur la page
   const indexOfLastUE = currentPage * itemsPerPage;
   // Index de la première Licence à afficher sur la page
@@ -258,25 +288,75 @@ export default function Licence() {
   const currentUEs = listLicence
     .filter(
       (licenceActuel) =>
-        licenceActuel.serveur?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        licenceActuel.serveur
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase()) ||
         licenceActuel.application?.nom
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         licenceActuel.application?.version
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        licenceActuel.date_Licence
+        licenceActuel.date_Expiration
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         licenceActuel.utilisateur?.prenom
           ?.toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
-        licenceActuel.utilisateur?.nom?.toLowerCase().includes(searchTerm.toLowerCase())
+        licenceActuel.utilisateur?.nom
+          ?.toLowerCase()
+          .includes(searchTerm.toLowerCase())
     )
     .slice(indexOfFirstUE, indexOfLastUE);
+  function convertirDateFrancais(dateStr) {
+    // Créer un objet Date à partir de la chaîne ISO
+    var dateObj = new Date(dateStr);
 
+    // Options pour le formatage de la date
+    var options = {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
+
+    // Formater la date en français
+    var dateFrancaise = dateObj.toLocaleString("fr-FR", options);
+
+    return dateFrancaise;
+  }
   return (
     <CRow>
+      <Dialog
+        open={openAlert}
+        onClose={closeAlert}
+        style={{ backgroundColor: "rgba(255, 0, 0, 0.5)" }}
+      >
+        <DialogTitle
+          style={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
+        >
+          Alert Expiration de Licence
+        </DialogTitle>
+        <DialogContent style={{ backgroundColor: "rgba(139, 0, 0, 0.5)" }}>
+          <Container style={{ backgroundColor: "rgba(139, 0, 0, 0.5)" }}>
+            <p style={{ color: "#fff", fontSize: "18px", fontWeight: "bold" }}>
+              Votre licence est sur le point d'expirer !
+            </p>
+            <p style={{ color: "#fff", fontSize: "16px" }}>
+              Veuillez renouveler votre licence pour continuer à utiliser notre
+              produit.
+            </p>
+          </Container>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeDialog}>Annuler</Button>
+          <Button onClick={ajouterLicence}>Renouveler la licence</Button>
+        </DialogActions>
+      </Dialog>
+
       <div
         className="d-grid gap-2 col-6 mx-auto"
         style={{ marginBottom: "10px" }}
@@ -286,7 +366,8 @@ export default function Licence() {
           <CButton
             color="primary"
             style={{ fontWeight: "bold" }}
-            onClick={openDialog}
+            // onClick={openDialog}
+            onClick={openAlertFunction}
           >
             Ajouter un Licence
           </CButton>
@@ -439,7 +520,7 @@ export default function Licence() {
                   id="date"
                   type="date"
                   label="Date de Licence"
-                  value={extractDateOnly(dateLicence)}
+                  value={convertirDateFrancais(dateLicence)}
                   variant="outlined"
                   fullWidth
                   margin="normal"
@@ -491,31 +572,30 @@ export default function Licence() {
             <CTable>
               <CTableHead color="dark">
                 <CTableRow>
-                  <CTableHeaderCell scope="col" style={{ maxWidth: "0px" }}>
+                  {/* <CTableHeaderCell scope="col" style={{ maxWidth: "4px" }}>
                     #
-                  </CTableHeaderCell>
-                 
-                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
+                  </CTableHeaderCell> */}
+
+                  <CTableHeaderCell style={{ maxWidth: "50px" }} scope="col">
                     Type
                   </CTableHeaderCell>
-                 
-                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
+
+                  <CTableHeaderCell style={{ maxWidth: "100px" }} scope="col">
                     Date_Expiration
                   </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Serveur</CTableHeaderCell>
+                  {/* <CTableHeaderCell scope="col">Serveur</CTableHeaderCell> */}
+                  <CTableHeaderCell style={{ maxWidth: "90px" }} scope="col">
+                    Cout(francs cfa)
+                  </CTableHeaderCell>
+                  <CTableHeaderCell style={{ maxWidth: "100px" }} scope="col">
+                    Paiement
+                  </CTableHeaderCell>
+
                   <CTableHeaderCell scope="col">
-                    Cout
+                    Nbre_Utilisateur
                   </CTableHeaderCell>
-                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
-                  Methode_Paiement
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Application
-                  </CTableHeaderCell>
-                 
-                  <CTableHeaderCell scope="col">Nbre_Utilisateur</CTableHeaderCell>
-                 
-                 
+                  <CTableHeaderCell scope="col">Application</CTableHeaderCell>
+
                   <CTableHeaderCell scope="col" className="text-center">
                     Operation
                   </CTableHeaderCell>
@@ -524,27 +604,27 @@ export default function Licence() {
               </CTableHead>
               <CTableBody>
                 {currentUEs.map((licenceActuel, index) => (
-                  <CTableRow key={index}>
-                    <CTableHeaderCell style={{ width: "0px" }} scope="row">
+                  <CTableRow key={index} style={{ padding: "0rem 0rem" }}>
+                    {/* <CTableHeaderCell style={{ width: "0px" }} scope="row">
                       {licenceActuel.id}
-                    </CTableHeaderCell>
+                    </CTableHeaderCell> */}
+                    <CTableDataCell>{licenceActuel?.type}</CTableDataCell>
                     <CTableDataCell>
-                      {licenceActuel?.type}
+                      {convertirDateFrancais(licenceActuel.date_Expiration)}
                     </CTableDataCell>
-                    <CTableDataCell>{extractDateOnly(licenceActuel.date_Expiration)}</CTableDataCell>
                     <CTableDataCell>
-                     
                       {licenceActuel.cout_Licence}
                     </CTableDataCell>
                     <CTableDataCell>
                       {licenceActuel.methode_Paiement}
                     </CTableDataCell>
-                   <CTableDataCell>
-                      {licenceActuel.nbre_Utilisateur}
-                    </CTableDataCell> 
                     <CTableDataCell>
-                      {licenceActuel?.application?.nom} version {licenceActuel?.application?.version}
-                    </CTableDataCell> 
+                      {licenceActuel.nbre_Utilisateur}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {licenceActuel?.application?.nom} version{" "}
+                      {licenceActuel?.application?.version}
+                    </CTableDataCell>
                     <CTableDataCell className="text-center">
                       {/* <Link to={`/maquette/licenceActuel/ModifierLicence/${licenceActuel.id}`}> */}
                       <CButton
@@ -571,16 +651,10 @@ export default function Licence() {
                         content={
                           <div>
                             <p>
-                              <strong>Serveur: </strong> {licenceActuel.serveur}
-                            </p>
-                            <p>
-                              <strong>Date Licence : </strong>{" "}
-                              {toDateFr(licenceActuel.date_Licence)}
-                            </p>
-                            <p>
                               <strong>Application: </strong> <br />
                               <b>Nom & Version: </b>
-                              {licenceActuel?.application.nom} {licenceActuel?.application.version}
+                              {licenceActuel?.application.nom}{" "}
+                              {licenceActuel?.application.version}
                               <br />
                               <b>Editeur: </b>
                               {licenceActuel?.application.editeur}
@@ -591,11 +665,14 @@ export default function Licence() {
                               <b>Categorie: </b>
                               {licenceActuel?.application.categorie} <br />
                               <b>Installe le : </b>
-                              {toDateFr(licenceActuel?.application.dateInstallation)}{" "}
+                              {toDateFr(
+                                licenceActuel?.application.dateInstallation
+                              )}{" "}
                             </p>
                             <p>
                               <strong>Utilisateur: </strong>{" "}
-                              {licenceActuel?.utilisateur?.prenom} {licenceActuel?.utilisateur?.nom}
+                              {licenceActuel?.application.utilisateur?.prenom}{" "}
+                              {licenceActuel?.application.utilisateur?.nom}
                             </p>
                           </div>
                         }

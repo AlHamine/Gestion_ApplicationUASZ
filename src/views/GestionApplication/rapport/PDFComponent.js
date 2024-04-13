@@ -154,7 +154,7 @@ const PDFComponent = ({ rapportSelected }) => {
     startY: 30,
   });
 
-  doc.save("rapport.pdf");
+  doc.save(`Rapport du ${extractDateOnly(rapportSelected.date)}.pdf`);
 };
 
 PDFComponent.propTypes = {
