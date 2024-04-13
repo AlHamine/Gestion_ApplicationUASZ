@@ -36,17 +36,15 @@ public class Application {
     private Date dateInstallation = new Date();
     private float coutInstallation;
     @JsonIgnore
-    @OneToMany
+    @OneToMany(mappedBy = "Application")
     private List<Licence> licenses;
-    // @ManyToOne
-    // private Rapport Rapport;
     @JsonIgnore
     @OneToMany(mappedBy = "application")
     private List<Deploiement> deploiement;
     @ManyToOne
     private Utilisateur Utilisateur;
-
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(mappedBy = "applications")
     private List<Rapport> Rapport;
 
 }

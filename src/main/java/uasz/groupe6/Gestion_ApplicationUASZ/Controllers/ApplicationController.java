@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.AllArgsConstructor;
+import uasz.groupe6.Gestion_ApplicationUASZ.DTO.ApplicationDTO;
 import uasz.groupe6.Gestion_ApplicationUASZ.Models.Application;
 import uasz.groupe6.Gestion_ApplicationUASZ.Services.ApplicationService;
 
@@ -19,12 +20,12 @@ import uasz.groupe6.Gestion_ApplicationUASZ.Services.ApplicationService;
 @AllArgsConstructor
 @RequestMapping("/application")
 public class ApplicationController {
-    
+
     private ApplicationService applicationService;
 
     @GetMapping
-    public List<Application> afficherToutApplications() {
-        return applicationService.afficherToutApplication();
+    public List<ApplicationDTO> afficherToutApplications() {
+        return applicationService.afficherToutApplicationAvecLicence();
     }
 
     @PostMapping
@@ -44,6 +45,6 @@ public class ApplicationController {
 
     @PatchMapping("/{id}")
     public Application modifierApplication(@RequestBody Application application) {
-       return applicationService.modifierApplication(application);
+        return applicationService.modifierApplication(application);
     }
 }

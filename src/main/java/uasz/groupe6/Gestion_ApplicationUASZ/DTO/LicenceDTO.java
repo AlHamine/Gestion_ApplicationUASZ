@@ -1,4 +1,4 @@
-package uasz.groupe6.Gestion_ApplicationUASZ.Models;
+package uasz.groupe6.Gestion_ApplicationUASZ.DTO;
 
 import java.util.Date;
 import java.util.List;
@@ -16,26 +16,33 @@ import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import uasz.groupe6.Gestion_ApplicationUASZ.Models.Licence;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Licence {
+public class LicenceDTO {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String type;
-    private Date Date_Expiration = new Date();
-    private int Nbre_Utilisateur;
+    private Date date_Expiration;
+    private int nbre_Utilisateur;
     private float Cout_Licence;
-    private String Methode_Paiement;
-    @JsonIgnore
-    @ManyToMany(mappedBy = "licences")
-    private List<Rapport> Rapport;
+    private String methode_Paiement;
 
-    @ManyToOne
-    private Application Application;
+    private ApplicationDTO application;
+
+    public LicenceDTO(Licence l) {
+        this.id = l.getId();
+        this.type = l.getType();
+        this.date_Expiration = l.getDate_Expiration();
+        this.Cout_Licence = l.getCout_Licence();
+        this.methode_Paiement = l.getMethode_Paiement();
+        this.nbre_Utilisateur = l.getNbre_Utilisateur();
+        this.application = new ApplicationDTO(l.getApplication());
+
+    }
 
 }

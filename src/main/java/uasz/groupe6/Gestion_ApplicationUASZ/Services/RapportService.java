@@ -26,7 +26,8 @@ public class RapportService {
     }
 
     public Rapport ajoutRapport() {
-        return RapportRepository.save(new Rapport(applicationService.afficherToutApplication().size(),
+        return RapportRepository.save(new Rapport(
+                applicationService.afficherToutApplication().size(),
                 applicationService.afficherToutApplicationGratuite().size(),
                 licenceService.afficherToutLicence().size(),
                 deploiementService.afficherToutDeploiement().size(),

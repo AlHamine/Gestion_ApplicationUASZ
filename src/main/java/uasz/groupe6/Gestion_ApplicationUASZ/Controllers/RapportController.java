@@ -1,6 +1,7 @@
 package uasz.groupe6.Gestion_ApplicationUASZ.Controllers;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import uasz.groupe6.Gestion_ApplicationUASZ.DTO.RapportDTO;
 import uasz.groupe6.Gestion_ApplicationUASZ.Models.Rapport;
 import uasz.groupe6.Gestion_ApplicationUASZ.Services.RapportService;
 
@@ -24,8 +26,8 @@ public class RapportController {
     private RapportService RapportService;
 
     @GetMapping
-    public List<Rapport> afficherToutRapport() {
-        return RapportService.afficherToutRapport();
+    public List<RapportDTO> afficherToutRapport() {
+        return RapportService.afficherToutRapport().stream().map(r -> new RapportDTO(r)).collect(Collectors.toList());
     }
 
     @PostMapping

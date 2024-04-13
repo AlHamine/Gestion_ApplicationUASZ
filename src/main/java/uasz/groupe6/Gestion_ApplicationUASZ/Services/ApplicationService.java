@@ -1,5 +1,6 @@
 package uasz.groupe6.Gestion_ApplicationUASZ.Services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,8 +8,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
+import uasz.groupe6.Gestion_ApplicationUASZ.DTO.ApplicationDTO;
 import uasz.groupe6.Gestion_ApplicationUASZ.Models.Application;
 import uasz.groupe6.Gestion_ApplicationUASZ.Repository.ApplicationRepository;
+import uasz.groupe6.Gestion_ApplicationUASZ.Repository.LicenceRepository;
 
 @Service
 @AllArgsConstructor
@@ -16,13 +19,27 @@ public class ApplicationService {
 
     private ApplicationRepository applicationRepository;
 
+    private LicenceRepository licenceRepository;
+
     public List<Application> afficherToutApplication() {
         return applicationRepository.findAll();
     }
+    public List<ApplicationDTO> afficherToutApplicationAvecLicence() {
+        return applicationRepository.findAll().stream().map(a -> MapDTO(a)).collect(Collectors.toList());
+    }
 
     public List<Application> afficherToutApplicationGratuite() {
-        return applicationRepository.findAll().stream().filter(a -> a.getLicenses() == null)
-                .collect(Collectors.toList());
+        return applicationRepository.applicationsGratuites();
+
+    }
+
+    // POur ajouter la licence courante vu que l'application peut posseder plusieurs
+    // licences
+    public ApplicationDTO MapDTO(Application a) {
+        ApplicationDTO appDTO = new ApplicationDTO(a);
+        appDTO.setLicenceActuel(licenceRepository.trouverLicenceActuelParApplicationId(a.getId()));
+
+        return appDTO;
     }
 
     public Application ajoutApplication(Application application) {
