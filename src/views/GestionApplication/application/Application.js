@@ -23,17 +23,69 @@ import { Link } from "react-router-dom";
 import { maxWidth } from "@mui/system";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  MenuItem,
+  Select,
+  InputLabel,
+  Button,
+  TextField,
+  InputAdornment,
+  Container,
+} from "@mui/material";
 export default function Application() {
   const [listApplication, setListApplication] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage] = useState(10); // Nombre d'éléments par page
   const [currentPage, setCurrentPage] = useState(1); // La page courante
+  const [openAlert, setOpenAlert] = useState(false);
+  const closeAlert = () => {
+    setOpenAlert(false);
+  };
+  function checkLicenseExpiry() {
+    const currentDate = new Date();
+    // alert(`La licence poura expiré.`);
+    // console.log(`La licence a expiré.`);
+    listApplication.forEach((app) => {
+      const expirationDate = new Date(app.licenceActuel?.date_Expiration);
+      console.log(`La licence a expiré. ${expirationDate}`);
+      // Comparaison de la date d'expiration avec la date actuelle
+      if (expirationDate <= currentDate) {
+        // Générer une alerte si la licence est expirée
+        alert(`La licence pour ${app.nom} a expiré.`);
+        openAlertFunction();
+      } else if (expirationDate - currentDate < 15 * 24 * 60 * 60 * 1000) {
+        const daysUntilExpiration = Math.ceil(
+          (expirationDate - currentDate) / (24 * 60 * 60 * 1000)
+        );
+        // Générer une alerte si la licence expire dans moins d'une semaine
+        alert(
+          `Attention ! La licence pour ${app.nom} expire bientôt dans ${daysUntilExpiration} jours.`
+        );
+        setOpenAlert(true);
+      }
+    });
+  }
 
+  // Vérifier les dates d'expiration toutes les 24 heures (86400000 ms)
+  // setInterval(checkLicenseExpiry, 86400000);
+  const openAlertFunction = () => {
+    setOpenAlert(true);
+  };
   useEffect(() => {
     fetchApplication();
-    // console.log(listApplication);
+    // checkLicenseExpiry(); // Appel initial pour vérifier les licences lors du chargement de la page
+
+    // Nettoyage de l'intervalle lorsque le composant est démonté
+    // return () => clearInterval(intervalId);
   }, []);
+  useEffect(() => {
+    // Maintenant, nous appelons checkLicenseExpiry chaque fois que listApplication est mis à jour
+    checkLicenseExpiry();
+  }, [listApplication]);
 
   const handleSearchChange = (libelle) => {
     setSearchTerm(libelle.target.value);
@@ -115,6 +167,38 @@ export default function Application() {
 
   return (
     <CRow>
+      <Dialog
+        open={openAlert}
+        onClose={closeAlert}
+        style={{ backgroundColor: "rgba(255, 0, 0, 0.5)" }}
+      >
+        <DialogTitle
+          style={{
+            color: "#fff",
+            fontSize: "24px",
+            backgroundColor: "rgba(139, 0, 0, 0.5)",
+            fontWeight: "bold",
+          }}
+        >
+          Alert Expiration de Licence
+        </DialogTitle>
+        <DialogContent style={{ backgroundColor: "rgba(139, 0, 0, 0.5)" }}>
+          <Container style={{ backgroundColor: "rgba(139, 0, 0, 0.5)" }}>
+            <p style={{ color: "#fff", fontSize: "18px", fontWeight: "bold" }}>
+              Votre licence est sur le point d'expirer !
+            </p>
+            <p style={{ color: "#fff", fontSize: "16px" }}>
+              Veuillez renouveler votre licence pour continuer à utiliser notre
+              produit.
+            </p>
+          </Container>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={closeAlert}>Annuler</Button>
+          <Button>Renouveler la licence</Button>
+        </DialogActions>
+      </Dialog>
+
       <div
         className="d-grid gap-2 col-6 mx-auto"
         style={{ marginBottom: "10px" }}

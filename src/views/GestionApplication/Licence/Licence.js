@@ -47,37 +47,14 @@ export default function Licence() {
   const [itemsPerPage] = useState(10); // Nombre d'éléments par page
   const [currentPage, setCurrentPage] = useState(1); // La page courante
   const [open, setOpen] = useState(false);
-  const [openAlert, setOpenAlert] = useState(false);
+
   const [open2, setOpen2] = useState(false);
   const [serveur, setServeur] = useState("");
   const [dateLicence, setDateLicence] = useState("");
   const [chargerLicence, setChargerLicence] = useState(null);
-  function checkLicenseExpiry() {
-    const currentDate = new Date();
-
-    listLicence.forEach((licence) => {
-      const expirationDate = new Date(licence.date_Expiration);
-      // Comparaison de la date d'expiration avec la date actuelle
-      if (expirationDate <= currentDate) {
-        // Générer une alerte si la licence est expirée
-        alert(`La licence pour ${licence.application.nom} a expiré.`);
-        openAlertFunction();
-      } else if (expirationDate - currentDate < 7 * 24 * 60 * 60 * 1000) {
-        // Générer une alerte si la licence expire dans moins d'une semaine
-        alert(
-          `Attention ! La licence pour ${licence.application.nom} expire bientôt.`
-        );
-      }
-    });
-  }
-
-  // Vérifier les dates d'expiration toutes les 24 heures (86400000 ms)
-  setInterval(checkLicenseExpiry, 86400000);
-
   useEffect(() => {
     fetchLicence();
     fetchApplication();
-    checkLicenseExpiry();
 
     // // Construction des options à partir de listApplication
     // const newOptions = listApplication.map((application) => ({
@@ -129,7 +106,6 @@ export default function Licence() {
         console.log(data);
       })
       .catch((error) => console.error("Error fetching Licence:", error));
-    checkLicenseExpiry();
   };
   const fetchApplication = () => {
     const token = sessionStorage.getItem("jwt");
@@ -273,13 +249,7 @@ export default function Licence() {
     // setSelectedOption("def");
     setOpen2(false);
   };
-  const closeAlert = () => {
-    setOpenAlert(false);
-  };
 
-  const openAlertFunction = () => {
-    setOpenAlert(true);
-  };
   // Index de la dernière Licence à afficher sur la page
   const indexOfLastUE = currentPage * itemsPerPage;
   // Index de la première Licence à afficher sur la page
@@ -330,33 +300,6 @@ export default function Licence() {
   }
   return (
     <CRow>
-      <Dialog
-        open={openAlert}
-        onClose={closeAlert}
-        style={{ backgroundColor: "rgba(255, 0, 0, 0.5)" }}
-      >
-        <DialogTitle
-          style={{ color: "#fff", fontSize: "24px", fontWeight: "bold" }}
-        >
-          Alert Expiration de Licence
-        </DialogTitle>
-        <DialogContent style={{ backgroundColor: "rgba(139, 0, 0, 0.5)" }}>
-          <Container style={{ backgroundColor: "rgba(139, 0, 0, 0.5)" }}>
-            <p style={{ color: "#fff", fontSize: "18px", fontWeight: "bold" }}>
-              Votre licence est sur le point d'expirer !
-            </p>
-            <p style={{ color: "#fff", fontSize: "16px" }}>
-              Veuillez renouveler votre licence pour continuer à utiliser notre
-              produit.
-            </p>
-          </Container>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={closeDialog}>Annuler</Button>
-          <Button onClick={ajouterLicence}>Renouveler la licence</Button>
-        </DialogActions>
-      </Dialog>
-
       <div
         className="d-grid gap-2 col-6 mx-auto"
         style={{ marginBottom: "10px" }}
@@ -366,8 +309,7 @@ export default function Licence() {
           <CButton
             color="primary"
             style={{ fontWeight: "bold" }}
-            // onClick={openDialog}
-            onClick={openAlertFunction}
+            onClick={openDialog}
           >
             Ajouter un Licence
           </CButton>

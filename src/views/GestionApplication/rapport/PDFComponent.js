@@ -44,8 +44,12 @@ const PDFComponent = ({ rapportSelected }) => {
     format: [842, 595],
   });
 
-  const entete = `Rapport du ${extractDateOnly(rapportSelected.date)}`;
-  doc.text(entete, 250, 30);
+  const entete = `Rapport du ${extractDateOnly(rapportSelected.date)} => ${
+    rapportSelected?.nbApplication
+  } applications , ${
+    rapportSelected?.nbApplicationGratuite
+  } application(s) gratuite(s) et ${rapportSelected.nbDeploiement} deploiement(s)`;
+  doc.text(entete, 50, 30);
 
   const generateApplicationContent = () => {
     let content = [];
@@ -106,6 +110,13 @@ const PDFComponent = ({ rapportSelected }) => {
   autoTable(doc, {
     head: [
       [
+        {
+          content: "Tableau des Applications",
+          colSpan: 8,
+          styles: { halign: "center" },
+        },
+      ],
+      [
         "Nom",
         "Editeur",
         "Version",
@@ -126,6 +137,13 @@ const PDFComponent = ({ rapportSelected }) => {
   autoTable(doc, {
     head: [
       [
+        {
+          content: "Tableau des Licences",
+          colSpan: 6,
+          styles: { halign: "center" },
+        },
+      ],
+      [
         "Type",
         "Nb. Utilisateurs",
         "Coût Licence (Francs CFA, Paiement)",
@@ -143,6 +161,13 @@ const PDFComponent = ({ rapportSelected }) => {
 
   autoTable(doc, {
     head: [
+      [
+        {
+          content: "Tableau des Déploiements",
+          colSpan: 4,
+          styles: { halign: "center" },
+        },
+      ],
       [
         "Serveur",
         "Date de déploiement",
