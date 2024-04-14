@@ -12,8 +12,8 @@
 
 **Gest des applications de UASZ** est une plateform degner pour geree les applications au sein de l'universite
 
-- Fabriquer avec **Spring-Boot**, **React**, **HTML, CSS** BD & **MariaDB**
-- **React Redux** state library &mdash; [Info](https://react-redux.js.org/)
+- Fabriquer avec **Spring-Boot**, **React**, **HTML, CSS** & **MariaDB**
+- **React js** state library &mdash; [Info](https://react-redux.js.org/)
 - **Dark mode**
 - **Styled** scrollbars
 - Composants réutilisables
@@ -55,12 +55,24 @@ Disposition mobile avec menu caché et cartes et tableaux pliables
 
 ```
 git clone https://github.com/AlHamine/Gestion_ApplicationUASZ.git
+
+```
+
+```
+mvn spring-boot:run
+
 ```
 
 #### Pour le Front-end
 
 ```
 git clone https://github.com/AlHamine/Gestion_ApplicationUASZ.git
+
+```
+
+```
+npm install
+npm start
 
 ```
 
