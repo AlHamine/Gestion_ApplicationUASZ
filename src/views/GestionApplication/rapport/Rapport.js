@@ -300,23 +300,15 @@ export default function Rapport() {
               <CTableHead color="dark">
                 <CTableRow>
                   <CTableHeaderCell scope="col" style={{ maxWidth: "0px" }}>
-                    #
-                  </CTableHeaderCell>
-                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
-                    Nombre d'Applications
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Nombre d'Applications Gratuites
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Nombre de Licence
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
-                    Nombre de Deploiement
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
                     Date du Rapport
                   </CTableHeaderCell>
+                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
+                    Applications
+                  </CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Gratuites</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Payantes</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Licence</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Deploiement</CTableHeaderCell>
                   <CTableHeaderCell scope="col" className="text-center">
                     Operation
                   </CTableHeaderCell>
@@ -326,14 +318,17 @@ export default function Rapport() {
               <CTableBody>
                 {currentUEs.map((rapportSelected, index) => (
                   <CTableRow key={index}>
-                    <CTableHeaderCell style={{ width: "0px" }} scope="row">
-                      {rapportSelected.id}
-                    </CTableHeaderCell>
+                    <CTableDataCell>
+                      {convertirDateFrancais(rapportSelected.date)}
+                    </CTableDataCell>
                     <CTableDataCell>
                       {rapportSelected?.nbApplication}
                     </CTableDataCell>
                     <CTableDataCell>
                       {rapportSelected.nbApplicationGratuite}
+                    </CTableDataCell>
+                    <CTableDataCell>
+                      {rapportSelected.nbApplicationPayante}
                     </CTableDataCell>
                     <CTableDataCell>{rapportSelected.nbLicence}</CTableDataCell>
 
@@ -342,9 +337,6 @@ export default function Rapport() {
                       {rapportSelected.nbDeploiement}
                     </CTableDataCell>
 
-                    <CTableDataCell>
-                      {convertirDateFrancais(rapportSelected.date)}
-                    </CTableDataCell>
                     <CTableDataCell className="text-center">
                       <CButton
                         color="danger"

@@ -15,49 +15,35 @@ import { cilArrowBottom, cilArrowTop, cilOptions } from "@coreui/icons";
 import { SERVER_URL } from "src/constantURL";
 import { Link } from "react-router-dom";
 const WidgetsDropdown = () => {
-  // const [rapport, setRapport] = useState({})
-  const [maquette, setMaquette] = useState(0);
-  const [repartition, setRapartition] = useState(0);
   const [rapport, setRapport] = useState({});
 
   useEffect(() => {
-    const fetchRapport = async () => {
-      try {
-        let newData = {};
+    const fetchRapport = () => {
+      // Récupérer le jeton d'authentification depuis le stockage de session
+      const token = sessionStorage.getItem("jwt");
 
-        if (SERVER_URL !== "http://localhost:8080/") {
-          const rapportResponse = await fetch(`${SERVER_URL}rapport`).then(
-            (response) => response.json()
-          );
-          newData = { ...newData, ...rapportResponse };
-        } else {
-          const [maquetteResponse, repartitionResponse, emploiResponse] =
-            await Promise.all([
-              fetch(`${SERVER_URL}rapport/maquette`).then((response) =>
-                response.json()
-              ),
-              fetch(`${SERVER_URL}repartition/rapport`).then((response) =>
-                response.json()
-              ),
-              fetch(`${SERVER_URL}emploi/rapport`).then((response) =>
-                response.json()
-              ),
-            ]);
-          newData = {
-            ...newData,
-            ...maquetteResponse,
-            ...repartitionResponse,
-            ...emploiResponse,
-          };
-        }
-
-        setRapport((prevState) => ({ ...prevState, ...newData }));
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+      // Effectuer une requête GET vers l'URL du serveur + "rapport/last"
+      fetch(SERVER_URL + "rapport/last", {
+        headers: { Authorization: token }, // Inclure le jeton d'authentification dans les en-têtes
+      })
+        .then((response) => {
+          // Vérifier si la réponse du serveur est réussie (200 OK)
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          // Convertir la réponse en JSON
+          return response.json();
+        })
+        .then((data) => {
+          // Mettre à jour le state 'rapport' avec les données récupérées
+          setRapport(data);
+        })
+        .catch((error) => {
+          // Gérer les erreurs survenues lors de la requête ou du traitement des données
+          console.error("Error fetching Rapport:", error);
+        });
     };
-
-    fetchRapport();
+    fetchRapport(); // Appeler la fonction fetchRapport une seule fois lors du montage du composant
   }, []);
 
   return (
@@ -69,7 +55,9 @@ const WidgetsDropdown = () => {
             color="success"
             value={
               <>
-                {rapport.nbFormation} Applications
+                {rapport.nbApplication} Applications **
+                {rapport.nbApplicationPayante} gratuites <br />
+                **{rapport.nbLicence} payantes <br />
                 {/* <span className="fs-6 fw-normal">
               (-12.4% <CIcon icon={cilArrowBottom} />)
             </span> */}
@@ -171,7 +159,7 @@ const WidgetsDropdown = () => {
             color="danger"
             value={
               <>
-                {rapport.nbFiliere} Licences
+                {rapport.nbLicence} Licences
                 {/* <span className="fs-6 fw-normal">
               (40.9% <CIcon icon={cilArrowTop} />)
             </span> */}
@@ -274,9 +262,7 @@ const WidgetsDropdown = () => {
             color="info"
             value={
               <>
-                {rapport.nbEnseignant} Deploiements <br />
-                {/* **{rapport.nbPER} PER <br />
-                 **{rapport.nbVac} Vacataires <br /> */}
+                {rapport.nbDeploiement} Deploiements <br />
               </>
             }
             title="Deploiement(s)"

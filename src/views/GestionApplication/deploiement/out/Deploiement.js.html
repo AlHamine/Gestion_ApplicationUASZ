@@ -1,4 +1,32 @@
-import React, { useEffect, useState } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Deploiement.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Deploiement.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from "react";
 import {
   // Import des composants d'interface utilisateur
   CCard,
@@ -418,61 +446,61 @@ export default function Deploiement() {
      * Composant représentant une rangée dans une mise en page.
      * Ce composant organise les éléments enfants en une rangée horizontale.
      */
-    <CRow>
+    &lt;CRow>
       {/* /**
        * Conteneur avec une grille de disposition pour les éléments enfants.
        * @param {Object} props - Propriétés du conteneur.
        * @param {string} [props.className="d-grid gap-2 col-6 mx-auto"] - Classes CSS à appliquer au conteneur pour le positionnement et la mise en page.
        * @param {Object} [props.style={{ marginBottom: "10px" }}] - Styles CSS à appliquer au conteneur pour les propriétés de mise en page.
        */}
-      <div
+      &lt;div
         className="d-grid gap-2 col-6 mx-auto"
         style={{ marginBottom: "10px" }}
       >
-        <div className="text-center">
-          {/* <Link to={"/maquette/dep/AjouterDeploiement"}> */}
-          <CButton
+        &lt;div className="text-center">
+          {/* &lt;Link to={"/maquette/dep/AjouterDeploiement"}> */}
+          &lt;CButton
             color="primary"
             style={{ fontWeight: "bold" }}
             onClick={openDialog}
           >
             Ajouter un Deploiement
-          </CButton>
-          {/* </Link> */}
-          <Dialog open={open} onClose={closeDialog}>
-            <DialogTitle> Ajout d'un Nouveau Deploiement </DialogTitle>
-            <DialogContent>
-              <Container>
-                <br></br>
-                <InputAdornment position="start">
-                  <img
+          &lt;/CButton>
+          {/* &lt;/Link> */}
+          &lt;Dialog open={open} onClose={closeDialog}>
+            &lt;DialogTitle> Ajout d'un Nouveau Deploiement &lt;/DialogTitle>
+            &lt;DialogContent>
+              &lt;Container>
+                &lt;br>&lt;/br>
+                &lt;InputAdornment position="start">
+                  &lt;img
                     src={serveurIcon}
                     alt="Serveur"
                     style={{ width: "24px", height: "24px" }}
                   />
                   Application
-                </InputAdornment>
+                &lt;/InputAdornment>
 
-                {/* <InputAdornment position="start">Application</InputAdornment> */}
-                <br></br>
-                <Select
+                {/* &lt;InputAdornment position="start">Application&lt;/InputAdornment> */}
+                &lt;br>&lt;/br>
+                &lt;Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={selectedOption}
                   onChange={(event) => setSelectedOption(event.target.value)}
                   fullWidth
                 >
-                  <MenuItem value={"def"} disabled>
+                  &lt;MenuItem value={"def"} disabled>
                     Selectionner une application
-                  </MenuItem>
+                  &lt;/MenuItem>
                   {listApplication.map((application) => (
-                    <MenuItem key={application.nom} value={application.id}>
+                    &lt;MenuItem key={application.nom} value={application.id}>
                       {application.nom} {application.version}
-                    </MenuItem>
+                    &lt;/MenuItem>
                   ))}
-                </Select>
-                <br></br>
-                <TextField
+                &lt;/Select>
+                &lt;br>&lt;/br>
+                &lt;TextField
                   id="serveur"
                   type="text"
                   // value={client.prenom}
@@ -484,18 +512,18 @@ export default function Deploiement() {
                   onChange={(event) => setServeur(event.target.value)}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">
-                        <img
+                      &lt;InputAdornment position="start">
+                        &lt;img
                           src={serveurIcon}
                           alt="Serveur"
                           style={{ width: "24px", height: "24px" }}
                         />
-                      </InputAdornment>
+                      &lt;/InputAdornment>
                     ),
                   }}
                 />
-                <br></br>
-                <TextField
+                &lt;br>&lt;/br>
+                &lt;TextField
                   id="date"
                   type="date"
                   label="Date de Deploiement"
@@ -505,62 +533,62 @@ export default function Deploiement() {
                   margin="normal"
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">
-                        <img
+                      &lt;InputAdornment position="start">
+                        &lt;img
                           src={calendrier}
                           alt="Calendrier"
                           style={{ width: "24px", height: "24px" }}
                         />
-                      </InputAdornment>
+                      &lt;/InputAdornment>
                     ),
                   }}
                   onChange={(event) => setDateDeploiement(event.target.value)}
                 />
-              </Container>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={closeDialog}>
-                <CancelSharpIcon color="error" />
-              </Button>
-              <Button onClick={ajouterDeploiement}>
-                <CheckCircleOutlineIcon color="success" />
-              </Button>
-            </DialogActions>
-          </Dialog>
-          <Dialog open={open2} onClose={closeDialog2}>
-            <DialogTitle> Modification d'un Deploiement </DialogTitle>
-            <DialogContent>
-              <Container>
-                <br></br>
-                <InputAdornment position="start">
-                  <img
+              &lt;/Container>
+            &lt;/DialogContent>
+            &lt;DialogActions>
+              &lt;Button onClick={closeDialog}>
+                &lt;CancelSharpIcon color="error" />
+              &lt;/Button>
+              &lt;Button onClick={ajouterDeploiement}>
+                &lt;CheckCircleOutlineIcon color="success" />
+              &lt;/Button>
+            &lt;/DialogActions>
+          &lt;/Dialog>
+          &lt;Dialog open={open2} onClose={closeDialog2}>
+            &lt;DialogTitle> Modification d'un Deploiement &lt;/DialogTitle>
+            &lt;DialogContent>
+              &lt;Container>
+                &lt;br>&lt;/br>
+                &lt;InputAdornment position="start">
+                  &lt;img
                     src={serveurIcon}
                     alt="Serveur"
                     style={{ width: "24px", height: "24px" }}
                   />
                   Application
-                </InputAdornment>
+                &lt;/InputAdornment>
 
-                {/* <InputAdornment position="start">Application</InputAdornment> */}
-                <br></br>
-                <Select
+                {/* &lt;InputAdornment position="start">Application&lt;/InputAdornment> */}
+                &lt;br>&lt;/br>
+                &lt;Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
                   value={selectedOption}
                   onChange={(event) => setSelectedOption(event.target.value)}
                   fullWidth
                 >
-                  <MenuItem value={"def"} disabled>
+                  &lt;MenuItem value={"def"} disabled>
                     Selectionner une application
-                  </MenuItem>
+                  &lt;/MenuItem>
                   {listApplication.map((application) => (
-                    <MenuItem key={application.nom} value={application.id}>
+                    &lt;MenuItem key={application.nom} value={application.id}>
                       {application.nom} {application.version}
-                    </MenuItem>
+                    &lt;/MenuItem>
                   ))}
-                </Select>
-                <br></br>
-                <TextField
+                &lt;/Select>
+                &lt;br>&lt;/br>
+                &lt;TextField
                   id="serveur"
                   type="text"
                   value={serveur}
@@ -572,18 +600,18 @@ export default function Deploiement() {
                   onChange={(event) => setServeur(event.target.value)}
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">
-                        <img
+                      &lt;InputAdornment position="start">
+                        &lt;img
                           src={serveurIcon}
                           alt="Serveur"
                           style={{ width: "24px", height: "24px" }}
                         />
-                      </InputAdornment>
+                      &lt;/InputAdornment>
                     ),
                   }}
                 />
-                <br></br>
-                <TextField
+                &lt;br>&lt;/br>
+                &lt;TextField
                   id="date"
                   type="date"
                   label="Date de Deploiement"
@@ -593,209 +621,232 @@ export default function Deploiement() {
                   margin="normal"
                   InputProps={{
                     startAdornment: (
-                      <InputAdornment position="start">
-                        <img
+                      &lt;InputAdornment position="start">
+                        &lt;img
                           src={calendrier}
                           alt="Calendrier"
                           style={{ width: "24px", height: "24px" }}
                         />
-                      </InputAdornment>
+                      &lt;/InputAdornment>
                     ),
                   }}
                   onChange={(event) => setDateDeploiement(event.target.value)}
                 />
-              </Container>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={closeDialog2}>
-                <CancelSharpIcon color="error" />
-              </Button>
-              <Button onClick={modifierDeploiement}>
-                <CheckCircleOutlineIcon color="success" />
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
-      </div>
-      <CCol xs={12}>
-        <CCard className="mb-4">
-          <CCardHeader>
-            <div>
-              <div>
-                <strong style={{ display: "block", textAlign: "center" }}>
-                  <h2> Liste des {listDeploiement?.length} Deploiements</h2>
-                </strong>
-              </div>
-              <CFormInput
+              &lt;/Container>
+            &lt;/DialogContent>
+            &lt;DialogActions>
+              &lt;Button onClick={closeDialog2}>
+                &lt;CancelSharpIcon color="error" />
+              &lt;/Button>
+              &lt;Button onClick={modifierDeploiement}>
+                &lt;CheckCircleOutlineIcon color="success" />
+              &lt;/Button>
+            &lt;/DialogActions>
+          &lt;/Dialog>
+        &lt;/div>
+      &lt;/div>
+      &lt;CCol xs={12}>
+        &lt;CCard className="mb-4">
+          &lt;CCardHeader>
+            &lt;div>
+              &lt;div>
+                &lt;strong style={{ display: "block", textAlign: "center" }}>
+                  &lt;h2> Liste des {listDeploiement?.length} Deploiements&lt;/h2>
+                &lt;/strong>
+              &lt;/div>
+              &lt;CFormInput
                 type="text"
                 size="sm"
                 placeholder="Rechercher Deploiement par serveur | application | utilisateur | Date de deploiement"
                 aria-label="sm input example"
                 onChange={handleSearchChange}
               />
-            </div>
-          </CCardHeader>
-          <CCardBody>
-            <CTable>
-              <CTableHead color="dark">
-                <CTableRow>
-                  <CTableHeaderCell scope="col" style={{ maxWidth: "0px" }}>
+            &lt;/div>
+          &lt;/CCardHeader>
+          &lt;CCardBody>
+            &lt;CTable>
+              &lt;CTableHead color="dark">
+                &lt;CTableRow>
+                  &lt;CTableHeaderCell scope="col" style={{ maxWidth: "0px" }}>
                     #
-                  </CTableHeaderCell>
-                  <CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
+                  &lt;/CTableHeaderCell>
+                  &lt;CTableHeaderCell style={{ minWidth: "200px" }} scope="col">
                     Application
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Serveur</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">
+                  &lt;/CTableHeaderCell>
+                  &lt;CTableHeaderCell scope="col">Serveur&lt;/CTableHeaderCell>
+                  &lt;CTableHeaderCell scope="col">
                     Date Deploiement
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Utisateur</CTableHeaderCell>
-                  <CTableHeaderCell scope="col" className="text-center">
+                  &lt;/CTableHeaderCell>
+                  &lt;CTableHeaderCell scope="col">Utisateur&lt;/CTableHeaderCell>
+                  &lt;CTableHeaderCell scope="col" className="text-center">
                     Operation
-                  </CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Details</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
+                  &lt;/CTableHeaderCell>
+                  &lt;CTableHeaderCell scope="col">Details&lt;/CTableHeaderCell>
+                &lt;/CTableRow>
+              &lt;/CTableHead>
+              &lt;CTableBody>
                 {currentUEs.map((dep, index) => (
-                  <CTableRow key={index}>
-                    <CTableHeaderCell style={{ width: "0px" }} scope="row">
+                  &lt;CTableRow key={index}>
+                    &lt;CTableHeaderCell style={{ width: "0px" }} scope="row">
                       {dep.id}
-                    </CTableHeaderCell>
-                    <CTableDataCell>
+                    &lt;/CTableHeaderCell>
+                    &lt;CTableDataCell>
                       {dep?.application?.nom} {dep?.application?.version}
-                    </CTableDataCell>
-                    <CTableDataCell>{dep.serveur}</CTableDataCell>
-                    <CTableDataCell>
+                    &lt;/CTableDataCell>
+                    &lt;CTableDataCell>{dep.serveur}&lt;/CTableDataCell>
+                    &lt;CTableDataCell>
                       {" "}
                       {extractDateOnly(dep.date_deploiement)}
-                    </CTableDataCell>
-                    <CTableDataCell>
+                    &lt;/CTableDataCell>
+                    &lt;CTableDataCell>
                       {dep.utilisateur?.prenom} {dep.utilisateur?.nom}
-                    </CTableDataCell>
-                    {/* <CTableDataCell>
+                    &lt;/CTableDataCell>
+                    {/* &lt;CTableDataCell>
                       {dep.description?.length > 15
                         ? `${dep.description.substring(0, 15)}...`
                         : dep.description}
-                    </CTableDataCell> */}
-                    <CTableDataCell className="text-center">
-                      {/* <Link to={`/maquette/dep/ModifierDeploiement/${dep.id}`}> */}
-                      <CButton
+                    &lt;/CTableDataCell> */}
+                    &lt;CTableDataCell className="text-center">
+                      {/* &lt;Link to={`/maquette/dep/ModifierDeploiement/${dep.id}`}> */}
+                      &lt;CButton
                         color="primary"
                         onClick={() => openDialog2(dep.id)}
                         style={{ fontWeight: "bold", marginRight: "5px" }}
                       >
-                        <EditIcon className="icon4" />
-                      </CButton>
-                      {/* </Link> */}
-                      <CButton
+                        &lt;EditIcon className="icon4" />
+                      &lt;/CButton>
+                      {/* &lt;/Link> */}
+                      &lt;CButton
                         color="danger"
                         onClick={() => onDelClick(dep.id)}
                       >
-                        <DeleteIcon
+                        &lt;DeleteIcon
                           style={{ color: "white" }}
                           className="icon3"
                         />
-                        {/* <DeleteIcon className="icon3" /> */}
-                      </CButton>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <CPopover
+                        {/* &lt;DeleteIcon className="icon3" /> */}
+                      &lt;/CButton>
+                    &lt;/CTableDataCell>
+                    &lt;CTableDataCell>
+                      &lt;CPopover
                         content={
-                          <div>
-                            <p>
-                              <strong>Serveur: </strong> {dep.serveur}
-                            </p>
-                            <p>
-                              <strong>Date deploiement : </strong>{" "}
+                          &lt;div>
+                            &lt;p>
+                              &lt;strong>Serveur: &lt;/strong> {dep.serveur}
+                            &lt;/p>
+                            &lt;p>
+                              &lt;strong>Date deploiement : &lt;/strong>{" "}
                               {toDateFr(dep.date_deploiement)}
-                            </p>
-                            <p>
-                              <strong>Application: </strong> <br />
-                              <b>Nom & Version: </b>
+                            &lt;/p>
+                            &lt;p>
+                              &lt;strong>Application: &lt;/strong> &lt;br />
+                              &lt;b>Nom &amp; Version: &lt;/b>
                               {dep?.application.nom} {dep?.application.version}
-                              <br />
-                              <b>Editeur: </b>
+                              &lt;br />
+                              &lt;b>Editeur: &lt;/b>
                               {dep?.application.editeur}
-                              <br />
-                              <b>Fonctionnalite: </b>
+                              &lt;br />
+                              &lt;b>Fonctionnalite: &lt;/b>
                               {dep?.application.fonctionnalite}
-                              <br />
-                              <b>Categorie: </b>
-                              {dep?.application.categorie} <br />
-                              <b>Installe le : </b>
+                              &lt;br />
+                              &lt;b>Categorie: &lt;/b>
+                              {dep?.application.categorie} &lt;br />
+                              &lt;b>Installe le : &lt;/b>
                               {toDateFr(dep?.application.dateInstallation)}{" "}
-                            </p>
-                            <p>
-                              <strong>Utilisateur: </strong>{" "}
+                            &lt;/p>
+                            &lt;p>
+                              &lt;strong>Utilisateur: &lt;/strong>{" "}
                               {dep?.utilisateur?.prenom} {dep?.utilisateur?.nom}
-                            </p>
-                          </div>
+                            &lt;/p>
+                          &lt;/div>
                         }
                         placement="right"
                         title={
-                          <div>
-                            <strong>{dep.serveur}</strong>
-                          </div>
+                          &lt;div>
+                            &lt;strong>{dep.serveur}&lt;/strong>
+                          &lt;/div>
                         }
                         trigger="focus"
                       >
-                        <CButton color="info">Detail</CButton>
-                      </CPopover>
-                    </CTableDataCell>
-                  </CTableRow>
+                        &lt;CButton color="info">Detail&lt;/CButton>
+                      &lt;/CPopover>
+                    &lt;/CTableDataCell>
+                  &lt;/CTableRow>
                 ))}
-                <CPagination align="end" aria-label="Page navigation example">
+                &lt;CPagination align="end" aria-label="Page navigation example">
                   {currentPage === 1 ? (
-                    <CPaginationItem disabled>Previous</CPaginationItem>
+                    &lt;CPaginationItem disabled>Previous&lt;/CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(-200)}>
+                    &lt;CPaginationItem onClick={() => handleChangePaginate(-200)}>
                       Previous
-                    </CPaginationItem>
+                    &lt;/CPaginationItem>
                   )}
                   {currentPage === 1 ? (
-                    <CPaginationItem disabled>1</CPaginationItem>
+                    &lt;CPaginationItem disabled>1&lt;/CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(1)}>
+                    &lt;CPaginationItem onClick={() => handleChangePaginate(1)}>
                       1
-                    </CPaginationItem>
+                    &lt;/CPaginationItem>
                   )}
                   {currentPage === lastPageNumber ? (
-                    <CPaginationItem disabled>2</CPaginationItem>
+                    &lt;CPaginationItem disabled>2&lt;/CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(2)}>
+                    &lt;CPaginationItem onClick={() => handleChangePaginate(2)}>
                       2
-                    </CPaginationItem>
+                    &lt;/CPaginationItem>
                   )}
                   {currentPage === lastPageNumber ? (
-                    <CPaginationItem disabled>3</CPaginationItem>
+                    &lt;CPaginationItem disabled>3&lt;/CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(3)}>
+                    &lt;CPaginationItem onClick={() => handleChangePaginate(3)}>
                       3
-                    </CPaginationItem>
+                    &lt;/CPaginationItem>
                   )}
                   {currentPage === lastPageNumber ? (
-                    <CPaginationItem disabled>Fin</CPaginationItem>
+                    &lt;CPaginationItem disabled>Fin&lt;/CPaginationItem>
                   ) : (
-                    <CPaginationItem
+                    &lt;CPaginationItem
                       onClick={() => handleChangePaginate(lastPageNumber)}
                     >
                       Fin
-                    </CPaginationItem>
+                    &lt;/CPaginationItem>
                   )}
                   {currentPage === lastPageNumber ? (
-                    <CPaginationItem disabled>Next</CPaginationItem>
+                    &lt;CPaginationItem disabled>Next&lt;/CPaginationItem>
                   ) : (
-                    <CPaginationItem onClick={() => handleChangePaginate(-100)}>
+                    &lt;CPaginationItem onClick={() => handleChangePaginate(-100)}>
                       Next
-                    </CPaginationItem>
+                    &lt;/CPaginationItem>
                   )}
-                </CPagination>
-              </CTableBody>
-            </CTable>
-          </CCardBody>
-        </CCard>
-      </CCol>
-    </CRow>
+                &lt;/CPagination>
+              &lt;/CTableBody>
+            &lt;/CTable>
+          &lt;/CCardBody>
+        &lt;/CCard>
+      &lt;/CCol>
+    &lt;/CRow>
   );
 }
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Apr 14 2024 22:51:54 GMT+0000 (heure moyenne de Greenwich)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

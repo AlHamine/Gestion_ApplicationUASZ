@@ -36,62 +36,82 @@ import {
   InputAdornment,
   Container,
 } from "@mui/material";
+
+/**
+ * @gaye-00
+ * Composant représentant la page d'affichage des applications.
+ */
 export default function Application() {
+  // State pour stocker la liste des applications
   const [listApplication, setListApplication] = useState([]);
+  // State pour gérer le terme de recherche
   const [searchTerm, setSearchTerm] = useState("");
-  const [itemsPerPage] = useState(10); // Nombre d'éléments par page
-  const [currentPage, setCurrentPage] = useState(1); // La page courante
+  // Constante pour le nombre d'éléments par page
+  const [itemsPerPage] = useState(10);
+  // State pour gérer la page courante
+  const [currentPage, setCurrentPage] = useState(1);
+  // State pour gérer l'ouverture de l'alerte
   const [openAlert, setOpenAlert] = useState(false);
+  // State pour stocker la liste des alertes d'expiration de licence
+  const [listAppArt, setListAppArt] = useState([]);
+
+  // Fonction pour fermer l'alerte
   const closeAlert = () => {
     setOpenAlert(false);
   };
+
+  // Fonction pour vérifier l'expiration des licences
   function checkLicenseExpiry() {
     const currentDate = new Date();
-    // alert(`La licence poura expiré.`);
-    // console.log(`La licence a expiré.`);
+    const newAlerts = [];
+
     listApplication.forEach((app) => {
       const expirationDate = new Date(app.licenceActuel?.date_Expiration);
       console.log(`La licence a expiré. ${expirationDate}`);
+
       // Comparaison de la date d'expiration avec la date actuelle
       if (expirationDate <= currentDate) {
-        // Générer une alerte si la licence est expirée
-        alert(`La licence pour ${app.nom} a expiré.`);
+        // Ajouter l'alerte à la liste si la licence est expirée
+        newAlerts.push(`La licence pour ${app.nom} a expiré.`);
         openAlertFunction();
       } else if (expirationDate - currentDate < 15 * 24 * 60 * 60 * 1000) {
         const daysUntilExpiration = Math.ceil(
           (expirationDate - currentDate) / (24 * 60 * 60 * 1000)
         );
-        // Générer une alerte si la licence expire dans moins d'une semaine
-        alert(
+        // Ajouter l'alerte à la liste si la licence expire dans moins d'une semaine
+        newAlerts.push(
           `Attention ! La licence pour ${app.nom} expire bientôt dans ${daysUntilExpiration} jours.`
         );
         setOpenAlert(true);
       }
     });
+    setListAppArt(newAlerts);
   }
 
-  // Vérifier les dates d'expiration toutes les 24 heures (86400000 ms)
-  // setInterval(checkLicenseExpiry, 86400000);
+  // Fonction pour ouvrir l'alerte
   const openAlertFunction = () => {
     setOpenAlert(true);
   };
+
+  // Effet pour récupérer la liste des applications lors du chargement du composant
   useEffect(() => {
     fetchApplication();
-    // checkLicenseExpiry(); // Appel initial pour vérifier les licences lors du chargement de la page
-
-    // Nettoyage de l'intervalle lorsque le composant est démonté
-    // return () => clearInterval(intervalId);
   }, []);
+
+  // Effet pour vérifier l'expiration des licences à chaque mise à jour de la liste des applications
   useEffect(() => {
-    // Maintenant, nous appelons checkLicenseExpiry chaque fois que listApplication est mis à jour
     checkLicenseExpiry();
   }, [listApplication]);
 
+  // Fonction pour gérer le changement de terme de recherche
   const handleSearchChange = (libelle) => {
     setSearchTerm(libelle.target.value);
   };
+
+  // Calcul du numéro de la dernière page
   const lastPageNumber = Math.ceil(listApplication.length / itemsPerPage);
 
+  // Fonction pour gérer le changement de page
   const handleChangePaginate = (value) => {
     if (value === -100) {
       setCurrentPage(currentPage + 1);
@@ -100,6 +120,7 @@ export default function Application() {
     } else setCurrentPage(value);
   };
 
+  // Fonction pour récupérer la liste des applications depuis le serveur
   const fetchApplication = () => {
     const token = sessionStorage.getItem("jwt");
     fetch(SERVER_URL + "application", {
@@ -112,13 +133,12 @@ export default function Application() {
         return response.json();
       })
       .then((data) => {
-        // Trier les ateliers par date de création en ordre décroissant
-        // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         setListApplication(data);
       })
       .catch((error) => console.error("Error fetching Application:", error));
   };
 
+  // Fonction pour supprimer une application
   const onDelClick = (id) => {
     if (window.confirm("Are you sure to delete de Application?")) {
       const token = sessionStorage.getItem("jwt");
@@ -136,15 +156,13 @@ export default function Application() {
         .catch((err) => console.error(err));
     }
   };
+
+  // Fonction pour extraire uniquement la date d'une chaîne de date et heure
   function extractDateOnly(dateTimeString) {
-    // Vérifier si la chaîne est vide ou null
     if (!dateTimeString) {
       return null;
     }
-
-    // Extraire la date uniquement
     const dateOnly = dateTimeString.substring(0, 10);
-
     return dateOnly;
   }
 
@@ -153,12 +171,6 @@ export default function Application() {
   // Index de la première Application à afficher sur la page
   const indexOfFirstUE = indexOfLastUE - itemsPerPage;
   // Liste des Application à afficher sur la page actuelle
-  //   const currentUEs = listApplication
-  //     .filter((application) =>
-  //       application.serveur?.toLowerCase().includes(searchTerm.toLowerCase())
-  //     )
-  //     .slice(indexOfFirstUE, indexOfLastUE);
-
   const currentApplications = listApplication
     .filter((application) =>
       application.nom.toLowerCase().includes(searchTerm.toLowerCase())
@@ -184,18 +196,29 @@ export default function Application() {
         </DialogTitle>
         <DialogContent style={{ backgroundColor: "rgba(139, 0, 0, 0.5)" }}>
           <Container style={{ backgroundColor: "rgba(139, 0, 0, 0.5)" }}>
-            <p style={{ color: "#fff", fontSize: "18px", fontWeight: "bold" }}>
-              Votre licence est sur le point d'expirer !
-            </p>
+            {listAppArt.map((alert, index) => (
+              <div key={index}>
+                <p
+                  style={{
+                    color: "#fff",
+                    fontSize: "18px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  {alert}
+                </p>
+              </div>
+            ))}
             <p style={{ color: "#fff", fontSize: "16px" }}>
-              Veuillez renouveler votre licence pour continuer à utiliser notre
+              Veuillez renouveler votre licence pour continuer à utiliser le
               produit.
             </p>
           </Container>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeAlert}>Annuler</Button>
-          <Button>Renouveler la licence</Button>
+          <Button className="btn btn-danger" onClick={closeAlert}>
+            Fermer
+          </Button>
         </DialogActions>
       </Dialog>
 

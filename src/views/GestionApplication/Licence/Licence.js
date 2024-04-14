@@ -40,39 +40,39 @@ import {
   Select,
   InputLabel,
 } from "@mui/material";
+/**
+ * @Diagne14
+ * Composant représentant la page d'affichage des applications.
+ */
 export default function Licence() {
+  // Initialisation des états du composant
   const [listLicence, setListLicence] = useState([]);
   const [listApplication, setListApplication] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [itemsPerPage] = useState(10); // Nombre d'éléments par page
   const [currentPage, setCurrentPage] = useState(1); // La page courante
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false); // Etat de la boîte de dialogue pour l'ajout de licence
 
-  const [open2, setOpen2] = useState(false);
-  const [serveur, setServeur] = useState("");
-  const [dateLicence, setDateLicence] = useState("");
-  const [chargerLicence, setChargerLicence] = useState(null);
+  const [open2, setOpen2] = useState(false); // Etat de la boîte de dialogue pour la modification de licence
+  const [serveur, setServeur] = useState(""); // Serveur sélectionné
+  const [dateLicence, setDateLicence] = useState(""); // Date de la licence sélectionnée
+  const [chargerLicence, setChargerLicence] = useState(null); // Licence sélectionnée à modifier
+
+  // Effet de chargement initial pour récupérer les données des licences et des applications
   useEffect(() => {
     fetchLicence();
     fetchApplication();
-
-    // // Construction des options à partir de listApplication
-    // const newOptions = listApplication.map((application) => ({
-    //   value: application.nom,
-    //   label: application.nom,
-    //   icon: serveur, // Utilisation de votre image serveur
-    // }));
-
-    // Mise à jour de l'état des options
-    // setOptions(newOptions, ...options);
-    // console.log(options);
   }, []);
 
+  // Fonction pour gérer le changement de terme de recherche
   const handleSearchChange = (libelle) => {
     setSearchTerm(libelle.target.value);
   };
+
+  // Calcul du nombre total de pages pour la pagination
   const lastPageNumber = Math.ceil(listLicence.length / itemsPerPage);
 
+  // Fonction pour gérer le changement de page
   const handleChangePaginate = (value) => {
     if (value === -100) {
       setCurrentPage(currentPage + 1);
@@ -81,11 +81,15 @@ export default function Licence() {
     } else setCurrentPage(value);
   };
 
+  // Initialisation de l'option sélectionnée dans le formulaire
   const [selectedOption, setSelectedOption] = useState("def");
 
+  // Fonction pour gérer le changement de sélection dans le formulaire
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
   };
+
+  // Fonction pour récupérer les données des licences depuis le serveur
   const fetchLicence = () => {
     const token = sessionStorage.getItem("jwt");
     fetch(SERVER_URL + "licence", {
@@ -98,15 +102,12 @@ export default function Licence() {
         return response.json();
       })
       .then((data) => {
-        // Trier les ateliers par date de création en ordre décroissant
-        // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         setListLicence(data);
-        console.log(listLicence);
-
-        console.log(data);
       })
       .catch((error) => console.error("Error fetching Licence:", error));
   };
+
+  // Fonction pour récupérer les données des applications depuis le serveur
   const fetchApplication = () => {
     const token = sessionStorage.getItem("jwt");
     fetch(SERVER_URL + "application", {
@@ -119,17 +120,14 @@ export default function Licence() {
         return response.json();
       })
       .then((data) => {
-        // Trier les ateliers par date de création en ordre décroissant
-        // data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
         setListApplication(data);
       })
-      .catch((error) => console.error("Error fetching aPPLICATION:", error));
+      .catch((error) => console.error("Error fetching APPLICATION:", error));
   };
-  function toDateFr(dateISO) {
-    // Créer un objet Date à partir de la chaîne ISO
-    var dateObj = new Date(dateISO);
 
-    // Options pour le formatage de la date
+  // Fonction pour formater la date en français
+  function toDateFr(dateISO) {
+    var dateObj = new Date(dateISO);
     var options = {
       weekday: "long",
       year: "numeric",
@@ -140,12 +138,11 @@ export default function Licence() {
       second: "2-digit",
       timeZoneName: "short",
     };
-
-    // Formater la date en français
     var dateFrancaise = dateObj.toLocaleString("fr-FR", options);
-
     return dateFrancaise;
   }
+
+  // Fonction pour ajouter une licence
   const ajouterLicence = () => {
     const token = sessionStorage.getItem("jwt");
     const donnee = {
@@ -161,14 +158,16 @@ export default function Licence() {
     })
       .then((response) => {
         if (response.ok) {
-          alert("Licence ajouter avec succes");
+          alert("Licence ajoutée avec succès");
           window.location.reload();
         } else {
-          alert("Something went wrong");
+          alert("Une erreur s'est produite");
         }
       })
       .catch((err) => console.error(err));
   };
+
+  // Fonction pour modifier une licence
   const modifierLicence = (id) => {
     const token = sessionStorage.getItem("jwt");
     const donnee = {
@@ -185,17 +184,17 @@ export default function Licence() {
     })
       .then((response) => {
         if (response.ok) {
-          alert("Licence modifie avec succes");
+          alert("Licence modifiée avec succès");
           window.location.reload();
         } else {
-          alert("Something went wrong");
+          alert("Une erreur s'est produite");
         }
       })
       .catch((err) => console.error(err));
   };
-
+  // Fonction pour supprimer une licence
   const onDelClick = (id) => {
-    if (window.confirm("Are you sure to delete de Licence?")) {
+    if (window.confirm("Êtes-vous sûr de vouloir supprimer la licence ?")) {
       const token = sessionStorage.getItem("jwt");
       fetch(SERVER_URL + `Licence/${id}`, {
         method: "DELETE",
@@ -211,50 +210,46 @@ export default function Licence() {
         .catch((err) => console.error(err));
     }
   };
+
+  // Fonction pour extraire la date uniquement
   function extractDateOnly(dateTimeString) {
-    // Vérifier si la chaîne est vide ou null
     if (!dateTimeString) {
       return null;
     }
-
-    // Extraire la date uniquement
     const dateOnly = dateTimeString.substring(0, 10);
-
     return dateOnly;
   }
+
+  // Fonction pour ouvrir la boîte de dialogue d'ajout de licence
   const openDialog = () => {
     setOpen(true);
   };
+
+  // Fonction pour fermer la boîte de dialogue d'ajout de licence
   const closeDialog = () => {
     setOpen(false);
   };
-  const openDialog2 = (id) => {
-    // Filtrer le déploiement correspondant à l'ID donné
-    const selectedLicence = listLicence.find((d) => d.id === id);
 
-    // Mettre à jour les états avec les détails du déploiement sélectionné
+  // Fonction pour ouvrir la boîte de dialogue de modification de licence
+  const openDialog2 = (id) => {
+    const selectedLicence = listLicence.find((d) => d.id === id);
     setChargerLicence((prev) => selectedLicence);
     setSelectedOption((prev) => selectedLicence?.application?.id);
     setServeur((prev) => selectedLicence?.serveur);
     setDateLicence((prev) => selectedLicence?.date_Licence);
-
-    // Ouvrir la boîte de dialogue
     setOpen2(true);
   };
 
+  // Fonction pour fermer la boîte de dialogue de modification de licence
   const closeDialog2 = () => {
-    // setChargerLicence(null);
-    // setServeur("");
-    // setDateLicence(null);
-    // setSelectedOption("def");
     setOpen2(false);
   };
 
-  // Index de la dernière Licence à afficher sur la page
+  // Calcul de l'index de la dernière licence à afficher sur la page
   const indexOfLastUE = currentPage * itemsPerPage;
-  // Index de la première Licence à afficher sur la page
+  // Calcul de l'index de la première licence à afficher sur la page
   const indexOfFirstUE = indexOfLastUE - itemsPerPage;
-  // Liste des Licence à afficher sur la page actuelle
+  // Liste des licences à afficher sur la page actuelle
   const currentUEs = listLicence
     .filter(
       (licenceActuel) =>
@@ -278,11 +273,10 @@ export default function Licence() {
           .includes(searchTerm.toLowerCase())
     )
     .slice(indexOfFirstUE, indexOfLastUE);
-  function convertirDateFrancais(dateStr) {
-    // Créer un objet Date à partir de la chaîne ISO
-    var dateObj = new Date(dateStr);
 
-    // Options pour le formatage de la date
+  // Fonction pour convertir la date en format français
+  function convertirDateFrancais(dateStr) {
+    var dateObj = new Date(dateStr);
     var options = {
       weekday: "long",
       year: "numeric",
@@ -292,10 +286,7 @@ export default function Licence() {
       minute: "2-digit",
       second: "2-digit",
     };
-
-    // Formater la date en français
     var dateFrancaise = dateObj.toLocaleString("fr-FR", options);
-
     return dateFrancaise;
   }
   return (

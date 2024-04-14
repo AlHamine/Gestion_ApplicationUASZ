@@ -18,6 +18,8 @@
     "lint": "eslint \"src/**/*.js\"",
     "start": "react-scripts start",
     "test:cov": "npm test -- --coverage --watchAll=false",
+    "styleguide": "styleguidist server",
+    "styleguide:build": "styleguidist build",
     "test:debug": "react-scripts --inspect-brk test --runInBand"
   },
   "dependencies": {
@@ -42,6 +44,7 @@
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-app-polyfill": "^3.0.0",
+    "react-docgen-annotation-resolver": "^2.0.0",
     "react-dom": "^18.2.0",
     "react-quill": "^2.0.0",
     "react-redux": "^8.1.1",
@@ -57,7 +60,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "jsdoc": "^4.0.2",
     "prettier": "2.8.8",
+    "react-docgen": "^7.0.3",
     "react-scripts": "5.0.1",
+    "react-styleguidist": "^13.1.2",
     "sass": "^1.63.6",
     "web-vitals": "^3.3.2"
   },
